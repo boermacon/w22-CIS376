@@ -46,51 +46,89 @@ class GridSpace:
         return self.cPoints
 
 class Engine:
+    #Class wide variables for general management of the game
     displayWidth = 720
     displayHeight = 720
     numGrid = 20
     FPS = 10
     def __init__(self):
+        """Constructor method for Engine class."""
+        #Initialize pygame
         pygame.init()
+        #Set the game loop boolean to false
         self._running = False
+        #Create a pygame display/surface
         self._screen = pygame.display.set_mode((Engine.displayWidth, Engine.displayHeight))
+        #Create a gridsize var
         self.gridSize = (int)(Engine.displayWidth/Engine.numGrid)
+        #Grid list
         self.grid = Engine.newGrid(self)
+        #Game clock
         self.myClock = pygame.time.Clock()
+        #Player location holder
+        self.myPlayer = 0
 
     def loop(self):
+        """Main game loop method. Takes self as input."""
+        #Turn on the game loop and disable the cell generator
         self._running = True
         generator = False
+        #Create a random wall color
         wallColor = (random.randint(0,240), random.randint(0,240), random.randint(0,240))
+        #Game loop
         while self._running:
+            #Create a new event queue
             events = pygame.event.get()
+            #Parse through all of the events
             for event in events:
+                #If quit event, then exit the game
                 if event.type == pygame.QUIT:
                     self._running = False
+                #If the mouse is pressed
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    #Check button type
                     mouse_presses = pygame.mouse.get_pressed()
                     if mouse_presses[0]:
+                        #Find and invert cells while generator is off
                         if not generator: self.grid[((pygame.mouse.get_pos()[0]//self.gridSize) * Engine.numGrid) + pygame.mouse.get_pos()[1]//self.gridSize].invertGridState()
+                #If keys in general
                 if event.type == pygame.KEYDOWN:
+                    #Spacebar pressed
                     if event.key == pygame.K_SPACE:
+                        #Invert generator
                         generator = not generator
-                        if not generator:
-                            self.resetPlayer()
+                        #Call reset player method with the generators status passed through
+                        self.resetPlayer(self, generator)
 
-            self._screen.fill((255, 255, 255))
-            if(generator):
+                    """PLACE CODE WHICH MOVES CHARACTER HERE"""
+
+            #Is generator active?
+            if generator:
+                #Update the grid
                 self.grid = self.updateGrid()
+                #Flash the border colors to indicate the updated status
                 self._screen.fill((random.randint(0,240), random.randint(0,240), random.randint(0,240)))
+            #Generator not active
+            else:
+                #Keep border color white
+                self._screen.fill((255, 255, 255))
                 
-
+            #Iterate through the list of gridspaces
             for space in self.grid:
+                #Check the grid states
                 if space.giveGridState():
+                    #Draw active/passable grids in black
                     pygame.draw.rect(self._screen, (0,0,0), space.returnGridRect())
                 else:
+                    #Draw inactive/wall grids in the defined wall color
                     pygame.draw.rect(self._screen, wallColor, space.returnGridRect())
+                #Check if a grid holds the player and draw an orange circle if it does
                 if space.giveCircleState():
                     pygame.draw.circle(self._screen, (255,127,0), space.giveCirclePoints()[0], space.giveCirclePoints()[1])
+            
+            #Update the pygame display
             pygame.display.update()
+            #Have the pygame clock tick in order to meet the Engine class's defined FPS
             self.myClock.tick(Engine.FPS)
     
     def newGrid(self):
@@ -205,13 +243,22 @@ class Engine:
         #Returns the updated grid list
         return temporaryGrid
                 
-    def resetPlayer(self):
-        for space in self.grid:
-            if space.giveCircleState():
-                space.invertCircleState()
-        if not self.grid[0].giveGridState():
-            self.grid[0].invertGridState()
-        self.grid[0].invertCircleState()
+    def resetPlayer(self, genStatus):
+        """Method to reset the player "entity". Takes self and boolean as inputs."""
+        #If the generator is on
+        if genStatus:
+            #Find and clear all player states from the board
+            for space in self.grid:
+                if space.giveCircleState():
+                    space.invertCircleState()
+        #Else the generator is off
+        else:
+            #Check and set the first gridspace as a valid space if it isn't
+            if not self.grid[0].giveGridState():
+                self.grid[0].invertGridState()
+            #Reset necessary variables to indicate that the first grid space holds the player character
+            self.grid[0].invertCircleState()
+            self.myPlayer = 0
         
 
 if __name__ == '__main__':
