@@ -98,7 +98,7 @@ class Engine:
                         #Invert generator
                         generator = not generator
                         #Call reset player method with the generators status passed through
-                        self.resetPlayer(self, generator)
+                        self.resetPlayer(generator)
 
                     """PLACE CODE WHICH MOVES CHARACTER HERE"""
 
@@ -126,6 +126,7 @@ class Engine:
                 if space.giveCircleState():
                     pygame.draw.circle(self._screen, (255,127,0), space.giveCirclePoints()[0], space.giveCirclePoints()[1])
             
+            """Check if the my player index value is the same as the final grid index"""
             #Update the pygame display
             pygame.display.update()
             #Have the pygame clock tick in order to meet the Engine class's defined FPS
