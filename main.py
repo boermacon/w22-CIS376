@@ -100,7 +100,45 @@ class Engine:
                         #Call reset player method with the generators status passed through
                         self.resetPlayer(generator)
 
-                    """PLACE CODE WHICH MOVES CHARACTER HERE"""
+                    """Character Movement"""
+                    #Player movement, only allowed if generator is off
+                    if generator == False:
+                        #If up is pressed and the grid space above the player is open and within the bounds of the game
+                        if event.key == pygame.K_UP and self.grid[self.myPlayer-1].giveGridState() == True and (self.myPlayer) % (Engine.numGrid) != 0:
+                            #Clear the player from the current position and move the player circle to the new space
+                            self.grid[self.myPlayer].invertCircleState()
+                            self.myPlayer = self.myPlayer-1
+                            self.grid[self.myPlayer].invertCircleState()
+                        #If down is pressed and the grid space below the player is open and within the bounds of the game
+                        if event.key == pygame.K_DOWN and self.grid[self.myPlayer+1].giveGridState() == True and (self.myPlayer+1) % (Engine.numGrid) != 0:
+                            #Clear the player from the current position and move the player circle to the new space
+                            self.grid[self.myPlayer].invertCircleState()
+                            self.myPlayer = self.myPlayer+1
+                            self.grid[self.myPlayer].invertCircleState()
+                        #If right is pressed and the grid space to the right of the player is open and within the bounds of the game
+                        if event.key == pygame.K_RIGHT and self.grid[self.myPlayer+Engine.numGrid].giveGridState() == True and (self.myPlayer+Engine.numGrid) <= ((Engine.numGrid*Engine.numGrid)-1):
+                            #Clear the player from the current position and move the player circle to the new space
+                            self.grid[self.myPlayer].invertCircleState()
+                            self.myPlayer = self.myPlayer+Engine.numGrid
+                            self.grid[self.myPlayer].invertCircleState()
+                        #If left is pressed and the grid space to the left of the player is open and within the bounds of the game
+                        if event.key == pygame.K_LEFT and self.grid[self.myPlayer-Engine.numGrid].giveGridState() == True and 0 <= (self.myPlayer-Engine.numGrid):
+                            #Clear the player from the current position and move the player circle to the new space
+                            self.grid[self.myPlayer].invertCircleState()
+                            self.myPlayer = self.myPlayer-Engine.numGrid
+                            self.grid[self.myPlayer].invertCircleState()
+
+                        """Check if the my player index value is the same as the final grid index after the player has moved"""
+                        #If the player has reached the bottom right corner of the grid, reset the board and display the win message
+                        if self.myPlayer == (Engine.numGrid*Engine.numGrid)-1:
+                            #Array containing the win message
+                            winMessage = [69,70,71,84,85,92,106,107,111,124,125,132,149,150,151,164,165,166,167,184,187,189,192,204,205,206,207,209,210,211,212,229,232,244,245,246,247,267,269,270,271,272,284,285,286,287,290,311,329,330,331,332,368,369,370,372]
+                            self.grid[self.myPlayer].invertCircleState()
+                            for space in self.grid:
+                                if space.giveGridState():
+                                    space.invertGridState()
+                            for i in winMessage:
+                                self.grid[i].invertGridState()
 
             #Is generator active?
             if generator:
@@ -126,7 +164,6 @@ class Engine:
                 if space.giveCircleState():
                     pygame.draw.circle(self._screen, (255,127,0), space.giveCirclePoints()[0], space.giveCirclePoints()[1])
             
-            """Check if the my player index value is the same as the final grid index"""
             #Update the pygame display
             pygame.display.update()
             #Have the pygame clock tick in order to meet the Engine class's defined FPS
