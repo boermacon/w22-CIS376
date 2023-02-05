@@ -104,25 +104,25 @@ class Engine:
                     #Player movement, only allowed if generator is off
                     if generator == False:
                         #If up is pressed and the grid space above the player is open and within the bounds of the game
-                        if event.key == pygame.K_UP and self.grid[self.myPlayer-1].giveGridState() == True and (self.myPlayer) % (Engine.numGrid) != 0:
+                        if event.key == pygame.K_UP and (self.myPlayer) % (Engine.numGrid) != 0 and self.grid[self.myPlayer-1].giveGridState() == True:
                             #Clear the player from the current position and move the player circle to the new space
                             self.grid[self.myPlayer].invertCircleState()
                             self.myPlayer = self.myPlayer-1
                             self.grid[self.myPlayer].invertCircleState()
                         #If down is pressed and the grid space below the player is open and within the bounds of the game
-                        if event.key == pygame.K_DOWN and self.grid[self.myPlayer+1].giveGridState() == True and (self.myPlayer+1) % (Engine.numGrid) != 0:
+                        if event.key == pygame.K_DOWN and (self.myPlayer+1) % (Engine.numGrid) != 0 and self.grid[self.myPlayer+1].giveGridState() == True:
                             #Clear the player from the current position and move the player circle to the new space
                             self.grid[self.myPlayer].invertCircleState()
                             self.myPlayer = self.myPlayer+1
                             self.grid[self.myPlayer].invertCircleState()
                         #If right is pressed and the grid space to the right of the player is open and within the bounds of the game
-                        if event.key == pygame.K_RIGHT and self.grid[self.myPlayer+Engine.numGrid].giveGridState() == True and (self.myPlayer+Engine.numGrid) <= ((Engine.numGrid*Engine.numGrid)-1):
+                        if event.key == pygame.K_RIGHT and (self.myPlayer+Engine.numGrid) < (Engine.numGrid*Engine.numGrid) and self.grid[self.myPlayer+Engine.numGrid].giveGridState() == True:
                             #Clear the player from the current position and move the player circle to the new space
                             self.grid[self.myPlayer].invertCircleState()
                             self.myPlayer = self.myPlayer+Engine.numGrid
                             self.grid[self.myPlayer].invertCircleState()
                         #If left is pressed and the grid space to the left of the player is open and within the bounds of the game
-                        if event.key == pygame.K_LEFT and self.grid[self.myPlayer-Engine.numGrid].giveGridState() == True and 0 <= (self.myPlayer-Engine.numGrid):
+                        if event.key == pygame.K_LEFT and 0 <= (self.myPlayer-Engine.numGrid) and self.grid[self.myPlayer-Engine.numGrid].giveGridState() == True:
                             #Clear the player from the current position and move the player circle to the new space
                             self.grid[self.myPlayer].invertCircleState()
                             self.myPlayer = self.myPlayer-Engine.numGrid
