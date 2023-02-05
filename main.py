@@ -2,6 +2,7 @@ import pygame
 import random
 
 """Code was developed off of the base game loop code which was developed/showcased in class"""
+"""Group members: Connor Boerma and Fabian Kirberg"""
 """Start of Connor's code"""
 class GridSpace:
     """Object class to store information for grid spaces"""
