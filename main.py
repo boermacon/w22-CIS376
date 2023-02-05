@@ -1,6 +1,8 @@
 import pygame
 import random
 
+"""Code was developed off of the base game loop code which was developed/showcased in class"""
+"""Start of Connor's code"""
 class GridSpace:
     """Object class to store information for grid spaces"""
     def __init__(self, gridRect, circlePoints, gridState, circleState, neighborList):
@@ -100,6 +102,7 @@ class Engine:
                         #Call reset player method with the generators status passed through
                         self.resetPlayer(generator)
 
+                    """End of Connor's code and start of Fabian's"""
                     """Character Movement"""
                     #Player movement, only allowed if generator is off
                     if generator == False:
@@ -140,6 +143,7 @@ class Engine:
                             for i in winMessage:
                                 self.grid[i].invertGridState()
 
+            """End of Fabian's Code and start of Connor's"""
             #Is generator active?
             if generator:
                 #Update the grid
@@ -298,6 +302,7 @@ class Engine:
             self.grid[0].invertCircleState()
             self.myPlayer = 0
         
+"""End of Connor's Code"""
 
 if __name__ == '__main__':
     e = Engine()
