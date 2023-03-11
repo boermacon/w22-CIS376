@@ -23,18 +23,26 @@ class Galaga:
         self.font = pygame.font.Font(None, 30)
         pygame.display.set_caption("Galaga")
         
-        self.load_assets()
+        #Load assets
+        self.player_image = pygame.image.load('player.png').convert_alpha()
+        self.enemy_image = pygame.image.load('enemy.png').convert_alpha()
+        self.player_bullet_image = pygame.image.load('missile.png').convert_alpha()
+        self.enemy_bullet_image = pygame.image.load('missile.png').convert_alpha()
+        #self.shoot_sound = pygame.mixer.Sound('shoot.wav')
+        #self.explosion_sound = pygame.mixer.Sound('explosion.wav')
 
         self.world = b2World(gravity=(0, 0))
         
-        self.ground_body = self.world.CreateStaticBody(
-            position=(0, -10),
-            shapes=b2PolygonShape(box=(50, 10)),
-        )
+        #self.ground_body = self.world.CreateStaticBody(position=(0, -10),shapes=b2PolygonShape(box=(50, 10)),)
+        #self.body.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(25/PPM,25/PPM)),density=1,friction=0.3))
         
+        #self.tempBody = self.world.CreateStaticBody(position=(100/PPM, 0))
+        #self.tempBody.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(10/PPM, SCREEN_HEIGHT/PPM)),density=1,friction=0.3))
+
         # Create a dynamic body
         self.player_body = self.world.CreateDynamicBody(position=(SCREEN_WIDTH / 2 / PPM, int((SCREEN_HEIGHT / PPM) * 0.9)))
         self.player_body.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(25/PPM,25/PPM)),density=1,friction=0.3))
+        self.player_body.userData = {'type': 'player'}
         #fixedRotation=True
         
         self.player_lives = PLAYER_LIVES
@@ -46,6 +54,7 @@ class Galaga:
         self.player_bullets = []
 
         self.running = True
+
         self.loop()
 
     def loop(self):
@@ -79,18 +88,29 @@ class Galaga:
         pygame.quit()
 
     def spawn_enemies(self):
-        #Method call that spawns three rows of 8 enemies and returns the list of those enemies
-        pass
+        myEnemies = []
+
+        #Loop this to create all enemies
+        newEnemy = self.world.CreateKinematicBody(position=(1300 / PPM, int((SCREEN_HEIGHT / PPM) * 0.9)))
+        newEnemy.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(25/PPM,25/PPM)),density=1,friction=0.3))
+        newEnemy.userData = {'type': 'enemy'}
+        myEnemies.append(newEnemy)
+        
+        return myEnemies
     
     def fire_player_bullet(self):
+        #MAKE SURE THIS CODE IS ADDED
         #self.shoot_sound.play()
+        #enemyBulletBody.userData = {'type': 'player_bullet'}
         pass
 
     def fire_enemy_bullet(self, enemy_body):
         #select a random enemey and fire a bullet every x seconds
         #probably use a random int the lenght of the row and check if that enemy is still alive, if not add row length and check again
 
+        #MAKE SURE THIS CODE IS ADDED
         #self.shoot_sound.play()
+        #enemyBulletBody.userData = {'type': 'enemy_bullet'}
         pass
 
     def update_enemies(self):
@@ -99,10 +119,43 @@ class Galaga:
     def update_bullets(self):
         #update player bullets that go up
         #update enemy bullest that go down
+
         pass
 
     def check_collisions(self):
-        pass
+        #self.explosion_sound.play()
+        for contact in self.world.contacts:
+            print("Contact")
+            if contact.touching:
+                fixture_a, fixture_b = contact.fixtureA, contact.fixtureB
+                body_a, body_b = fixture_a.body, fixture_b.body
+                
+                if body_a.userData['type'] == 'player' and (body_b.userData['type'] == 'enemy' or body_b.userData['type'] == 'enemy_bullet'):
+                    self.world.DestroyBody(body_b)
+                    self.enemies.remove(body_b)
+                    self.player_lives -= 1
+                    if self.player_lives <= 0:
+                        self.running = False
+                        return
+                elif (body_a.userData['type'] == 'enemy' or body_a.userData['type'] == 'enemy_bullet') and body_b.userData['type'] == 'player':
+                    self.world.DestroyBody(body_a)
+                    self.enemies.remove(body_a)
+                    self.player_lives -= 1
+                    if self.player_lives <= 0:
+                        self.running = False
+                        return
+                elif body_a.userData['type'] == 'player_bullet' and body_b.userData['type'] == 'enemy':
+                    self.world.DestroyBody(body_a)
+                    self.player_bullets.remove(body_a)
+                    self.world.DestroyBody(body_b)
+                    self.enemies.remove(body_b)
+                    self.player_score += ENEMY_POINTS
+                elif body_a.userData['type'] == 'enemy' and body_b.userData['type'] == 'player_bullet':
+                    self.world.DestroyBody(body_a)
+                    self.enemies.remove(body_a)
+                    self.world.DestroyBody(body_b)
+                    self.player_bullets.remove(body_b)
+                    self.player_score += ENEMY_POINTS
 
     def draw_scene(self):
         self.screen.fill((0, 0, 0))
@@ -118,19 +171,18 @@ class Galaga:
         #pygame.draw.polygon(self.screen, (0, 0, 255), vertices)
         self.screen.blit(self.player_image, vertices[0])
         
+        for enemy in self.enemies:
+            vertices = [(enemy.transform * vertex) * PPM for vertex in enemy.fixtures[0].shape.vertices]
+            #pygame.draw.polygon(self.screen, (0, 0, 255), vertices)
+            self.screen.blit(self.enemy_image, vertices[0])
+
+
+        #vertices = [(self.tempBody.transform * vertex) * PPM for vertex in self.tempBody.fixtures[0].shape.vertices]
+        #pygame.draw.polygon(self.screen, (255, 0, 0), vertices)
+
         self.world.DrawDebugData()
         pygame.display.flip()
-
-    def load_assets(self):
-        self.player_image = pygame.image.load('player.png').convert_alpha()
-        self.enemy_image = pygame.image.load('enemy.png').convert_alpha()
-        self.player_bullet_image = pygame.image.load('missile.png').convert_alpha()
-        self.enemy_bullet_image = pygame.image.load('missile.png').convert_alpha()
-        #self.shoot_sound = pygame.mixer.Sound('shoot.wav')
-        #self.explosion_sound = pygame.mixer.Sound('explosion.wav')
         
-    def play_explosion_sound(self):
-        self.explosion_sound.play()
 
 if __name__ == '__main__':
     game = Galaga()
