@@ -5,8 +5,9 @@ import random
 import Box2D
 from Box2D import *
 
-SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
-PLAYER_SPEED = 5
+SCREEN_WIDTH, SCREEN_HEIGHT = 1600, 900
+PPM = 20
+PLAYER_SPEED = 30
 PLAYER_BULLET_SPEED = 10
 ENEMY_BULLET_SPEED = 5
 PLAYER_LIVES = 3
@@ -24,18 +25,17 @@ class Galaga:
         
         self.load_assets()
 
-        self.world = b2World(gravity=(0, -10))
+        self.world = b2World(gravity=(0, 0))
         
         self.ground_body = self.world.CreateStaticBody(
             position=(0, -10),
             shapes=b2PolygonShape(box=(50, 10)),
         )
         
-        self.player_body = self.world.CreateDynamicBody(
-            position=(0, 0),
-            shapes=b2PolygonShape(box=(1, 1)),
-            fixedRotation=True,
-        )
+        # Create a dynamic body
+        self.player_body = self.world.CreateDynamicBody(position=(SCREEN_WIDTH / 2 / PPM, int((SCREEN_HEIGHT / PPM) * 0.9)))
+        self.player_body.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(25/PPM,25/PPM)),density=1,friction=0.3))
+        #fixedRotation=True
         
         self.player_lives = PLAYER_LIVES
         self.player_score = 0
@@ -55,17 +55,14 @@ class Galaga:
                     self.running = False
                 elif event.type == KEYDOWN:
                     if event.key == K_LEFT:
-                        #Player move left
-                        pass
+                        self.player_body.linearVelocity = (-PLAYER_SPEED, 0)
                     elif event.key == K_RIGHT:
-                        #player move right
-                        pass
+                        self.player_body.linearVelocity = (PLAYER_SPEED, 0)
                     elif event.key == K_SPACE:
                         self.fire_player_bullet()
                 elif event.type == KEYUP:
                     if event.key in (K_LEFT, K_RIGHT):
-                        #player stop move
-                        pass
+                        self.player_body.linearVelocity = (0, 0)
             
             time_step = 1.0 / 60.0
             velocity_iterations = 6
@@ -73,8 +70,7 @@ class Galaga:
             self.world.Step(time_step, velocity_iterations, position_iterations)
             
             self.update_enemies()
-            self.update_player_bullets()
-            self.update_enemy_bullets()
+            self.update_bullets()
             self.check_collisions()
             self.draw_scene()
             
@@ -117,16 +113,21 @@ class Galaga:
         score_text = self.font.render(f"Score: {self.player_score}", True, (255, 255, 255))
         self.screen.blit(score_text, (SCREEN_WIDTH - score_text.get_width() - 20, 20))
         
+        # Draw the player body
+        vertices = [(self.player_body.transform * vertex) * PPM for vertex in self.player_body.fixtures[0].shape.vertices]
+        #pygame.draw.polygon(self.screen, (0, 0, 255), vertices)
+        self.screen.blit(self.player_image, vertices[0])
+        
         self.world.DrawDebugData()
         pygame.display.flip()
 
     def load_assets(self):
         self.player_image = pygame.image.load('player.png').convert_alpha()
         self.enemy_image = pygame.image.load('enemy.png').convert_alpha()
-        self.player_bullet_image = pygame.image.load('player_bullet.png').convert_alpha()
-        self.enemy_bullet_image = pygame.image.load('enemy_bullet.png').convert_alpha()
-        self.shoot_sound = pygame.mixer.Sound('shoot.wav')
-        self.explosion_sound = pygame.mixer.Sound('explosion.wav')
+        self.player_bullet_image = pygame.image.load('missile.png').convert_alpha()
+        self.enemy_bullet_image = pygame.image.load('missile.png').convert_alpha()
+        #self.shoot_sound = pygame.mixer.Sound('shoot.wav')
+        #self.explosion_sound = pygame.mixer.Sound('explosion.wav')
         
     def play_explosion_sound(self):
         self.explosion_sound.play()
