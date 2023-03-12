@@ -14,7 +14,8 @@ ENEMY_BULLET_SPEED = 5
 ENEMY_SHOOT_PERCENTAGE = 3
 PLAYER_LIVES = 3
 FPS = 60
-ENEMY_POINTS = 10
+ENEMY_POINTS, MISSILE_POINTS = 10, 1
+NUM_ENEMIES = 10
 
 class Galaga:
     """Class for a Galaga Game recreation."""
@@ -37,8 +38,8 @@ class Galaga:
         self.enemy_bullet_image = pygame.image.load('missile.png').convert_alpha()
         self.enemy_bullet_image = pygame.transform.rotate(self.enemy_bullet_image, 180)
         self.enemy_shoot_sound = pygame.mixer.Sound('blaster-2.mp3')
-        #self.shoot_sound = pygame.mixer.Sound('shoot.wav')
-        #self.explosion_sound = pygame.mixer.Sound('explosion.wav')
+        self.shoot_sound = pygame.mixer.Sound('shoot.wav')
+        self.explosion_sound = pygame.mixer.Sound('explosion.wav')
 
         # Create a world
         self.world = b2World(gravity=(0, 0))
@@ -90,7 +91,7 @@ class Galaga:
                         self.keys.pop(self.keys.index(K_RIGHT))
                     if event.key == K_LEFT and K_LEFT in self.keys:
                         self.keys.pop(self.keys.index(K_LEFT))
-                    print(self.keys)
+                    #print(self.keys)
                     if not self.keys:
                         self.player_body.linearVelocity = (0, 0)
                         
@@ -104,26 +105,29 @@ class Galaga:
             position_iterations = 2
             self.world.Step(time_step, velocity_iterations, position_iterations)
             
+            self.fire_enemy_bullet()
             self.update_enemies()
             self.check_collisions()
             self.gameState = self.check_game_state()
             self.draw_scene()
 
-            self.fire_enemy_bullet()
-            
             self.clock.tick(FPS)
         
         self.endGame()
 
     def spawn_enemies(self):
-        """Method that handles enemy generation."""
+        """Method that handles enemy generation. Takes self as input. Outputs a list of (kinematic) bodies."""
+        # Create an empty list for enemies
         myEnemies = []
-        for i in range(10):
+
+        # Iterate through a loop NUMENEMY. Create kinematic bodies with fixtures and user data appending those bodies to the my enemies list
+        for i in range(NUM_ENEMIES):
             newEnemy = self.world.CreateKinematicBody(position=((200 + (i*133)) / PPM, int((SCREEN_HEIGHT / PPM) * 0.15)))
             newEnemy.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(25/PPM,25/PPM)),density=1,friction=0.3))
             newEnemy.userData = {'type': 'enemy'}
             myEnemies.append(newEnemy)
         
+        # Return the created enemies list
         return myEnemies
     
     def fire_player_bullet(self):
@@ -134,7 +138,7 @@ class Galaga:
         offset_y = 2.5
 
         # Creating bullet body
-        bullet = self.world.CreateKinematicBody(position=(self.player_body.position[0] + offset_x, ((self.player_body.position[1] + offset_y) * 0.9)))
+        bullet = self.world.CreateDynamicBody(position=(self.player_body.position[0] + offset_x, ((self.player_body.position[1] + offset_y) * 0.9)))
         bullet.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(25/PPM,25/PPM)),density=1,friction=0.3))
         bullet.userData = {'type': 'player_bullet'}
         self.player_bullets.append(bullet)
@@ -144,9 +148,13 @@ class Galaga:
         pygame.mixer.Sound.play(self.shoot_sound) # Initiating shooting sound
         
     def fire_enemy_bullet(self):
-        """Method that handles enemy bullet firing."""
+        """Method that handles enemy bullet firing. Takes self as input"""
+        # Shutdown game if error occurs where we try to fire an enemey bullet with no enemies present
+        if len(self.enemies) <= 0:
+            exit(-1)
+
         #Select a random enemy and fire a bullet based on a percentage.
-        randNum = random.randint(0, 9)
+        randNum = random.randint(0, (len(self.enemies)-1))
         chanceToShoot = random.randint(0, 100)
         if (self.enemies[randNum] and chanceToShoot <= ENEMY_SHOOT_PERCENTAGE):
             enemyBulletBody = self.world.CreateKinematicBody(position=(self.enemies[randNum].position.x + 0.25, self.enemies[randNum].position.y + 0.5))
@@ -161,7 +169,6 @@ class Galaga:
             if x.position.y >= 70:
                 self.world.DestroyBody(x)
                 self.enemy_bullets.remove(x)
-        pass
 
     def update_enemies(self):
         """Method that handles enemy movement."""
@@ -234,6 +241,20 @@ class Galaga:
                     self.player_bullets.remove(body_b)
                     self.player_score += ENEMY_POINTS
 
+                # Check if an enemey bullet has collided with a player bullet -> destroy both entities and increase points
+                elif body_a.userData['type'] == 'player_bullet' and body_b.userData['type'] == 'enemy_bullet':
+                    self.world.DestroyBody(body_a)
+                    self.player_bullets.remove(body_a)
+                    self.world.DestroyBody(body_b)
+                    self.enemy_bullets.remove(body_b)
+                    self.player_score += MISSILE_POINTS
+                elif body_a.userData['type'] == 'enemy_bullet' and body_b.userData['type'] == 'player_bullet':
+                    self.world.DestroyBody(body_a)
+                    self.enemy_bullets.remove(body_a)
+                    self.world.DestroyBody(body_b)
+                    self.player_bullets.remove(body_b)
+                    self.player_score += MISSILE_POINTS
+
     def draw_scene(self):
         """Method to draw screen during main game loop. Takes self as input."""
         # Clear screen as black
@@ -273,13 +294,15 @@ class Galaga:
     
     def endGame(self):
         """Method to handle endscreen display. Takes self as input"""
+        endRun = False
+        # If we quit before we won/lost
+        if self.gameState == 0:
+            pygame.quit()
+        else:
+            endRun = True
+        
         #Loop until exit
-        while True:
-            #Check for exit
-            for event in pygame.event.get():
-                if event.type == QUIT:
-                    pygame.quit()
-            
+        while endRun:
             #Blank Screen and new font size
             fontSize = 50
             self.screen.fill((0, 0, 0))
@@ -312,7 +335,12 @@ class Galaga:
             # Flip the display
             pygame.display.flip()
 
+            #Check for exit
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    endRun = False
+                    pygame.quit()
+
 # Python start code
 if __name__ == '__main__':
-    game = Galaga()
-    game.run()      
+    game = Galaga()     
