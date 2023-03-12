@@ -59,7 +59,8 @@ class Galaga:
 
         self.gameState = 0
         self.running = True
-
+        pygame.mixer.music.load('8-bit-space-music.mp3')
+        pygame.mixer.music.play(-1)
         self.loop()
 
     def loop(self):
@@ -99,9 +100,8 @@ class Galaga:
         self.endGame()
 
     def spawn_enemies(self):
+        """Method that handles enemy generation."""
         myEnemies = []
-
-        #Loop this to create all enemies
         for i in range(10):
             newEnemy = self.world.CreateKinematicBody(position=((200 + (i*133)) / PPM, int((SCREEN_HEIGHT / PPM) * 0.15)))
             newEnemy.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(25/PPM,25/PPM)),density=1,friction=0.3))
@@ -117,13 +117,13 @@ class Galaga:
         pass
 
     def fire_enemy_bullet(self):
-        #select a random enemey and fire a bullet every x seconds
-        #probably use a random int the lenght of the row and check if that enemy is still alive, if not add row length and check again
+        """Method that handles enemy bullet firing."""
+        #Select a random enemy and fire a bullet based on a percentage.
         randNum = random.randint(0, 9)
         chanceToShoot = random.randint(0, 100)
         if (self.enemies[randNum] and chanceToShoot <= ENEMY_SHOOT_PERCENTAGE):
             enemyBulletBody = self.world.CreateKinematicBody(position=(self.enemies[randNum].position.x + 0.25, self.enemies[randNum].position.y + 0.5))
-            enemyBulletBody.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(10/PPM,10/PPM)),density=1,friction=0.3))
+            enemyBulletBody.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(2/PPM,5/PPM)),density=1,friction=0.3))
             enemyBulletBody.userData = {'type': 'enemy_bullet'}
             enemyBulletBody.linearVelocity = (0, ENEMY_BULLET_SPEED)
             self.enemy_shoot_sound.play()
@@ -131,6 +131,8 @@ class Galaga:
         pass
 
     def update_enemies(self):
+        """Method that handles enemy movement."""
+        #Loop that adjusts velocity for each enemy depending on their x,y position.
         for x in self.enemies:
             if (x):
                 if (x.linearVelocity == (0, 0)):
