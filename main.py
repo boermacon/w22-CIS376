@@ -8,8 +8,10 @@ from Box2D import *
 SCREEN_WIDTH, SCREEN_HEIGHT = 1600, 900
 PPM = 20
 PLAYER_SPEED = 30
+ENEMY_SPEED = 10
 PLAYER_BULLET_SPEED = 10
 ENEMY_BULLET_SPEED = 5
+ENEMY_SHOOT_PERCENTAGE = 3
 PLAYER_LIVES = 3
 FPS = 60
 ENEMY_POINTS = 10
@@ -28,6 +30,7 @@ class Galaga:
         self.enemy_image = pygame.image.load('enemy.png').convert_alpha()
         self.player_bullet_image = pygame.image.load('missile.png').convert_alpha()
         self.enemy_bullet_image = pygame.image.load('missile.png').convert_alpha()
+        self.enemy_bullet_image = pygame.transform.rotate(self.enemy_bullet_image, 180)
         #self.shoot_sound = pygame.mixer.Sound('shoot.wav')
         #self.explosion_sound = pygame.mixer.Sound('explosion.wav')
 
@@ -41,7 +44,7 @@ class Galaga:
 
         # Create a dynamic body
         self.player_body = self.world.CreateDynamicBody(position=(SCREEN_WIDTH / 2 / PPM, int((SCREEN_HEIGHT / PPM) * 0.9)))
-        self.player_body.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(25/PPM,25/PPM)),density=1,friction=0.3))
+        self.player_body.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(25/PPM,25/PPM)),density=1,friction=0.3,isSensor=True))
         self.player_body.userData = {'type': 'player'}
         #fixedRotation=True
         
@@ -82,6 +85,8 @@ class Galaga:
             self.update_bullets()
             self.check_collisions()
             self.draw_scene()
+
+            self.fire_enemy_bullet()
             
             self.clock.tick(FPS)
         
@@ -92,7 +97,7 @@ class Galaga:
 
         #Loop this to create all enemies
         for i in range(10):
-            newEnemy = self.world.CreateKinematicBody(position=((200 + (i*133)) / PPM, int((SCREEN_HEIGHT / PPM) * 0.2)))
+            newEnemy = self.world.CreateKinematicBody(position=((200 + (i*133)) / PPM, int((SCREEN_HEIGHT / PPM) * 0.15)))
             newEnemy.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(25/PPM,25/PPM)),density=1,friction=0.3))
             newEnemy.userData = {'type': 'enemy'}
             myEnemies.append(newEnemy)
@@ -105,23 +110,32 @@ class Galaga:
         #enemyBulletBody.userData = {'type': 'player_bullet'}
         pass
 
-    def fire_enemy_bullet(self, enemy_body):
+    def fire_enemy_bullet(self):
         #select a random enemey and fire a bullet every x seconds
         #probably use a random int the lenght of the row and check if that enemy is still alive, if not add row length and check again
-
-        #MAKE SURE THIS CODE IS ADDED
-        #self.shoot_sound.play()
-        #enemyBulletBody.userData = {'type': 'enemy_bullet'}
+        randNum = random.randint(0, 9)
+        chanceToShoot = random.randint(0, 100)
+        if (self.enemies[randNum] and chanceToShoot <= ENEMY_SHOOT_PERCENTAGE):
+            enemyBulletBody = self.world.CreateKinematicBody(position=(self.enemies[randNum].position.x + 0.25, self.enemies[randNum].position.y + 0.5))
+            enemyBulletBody.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(10/PPM,10/PPM)),density=1,friction=0.3))
+            #MAKE SURE THIS CODE IS ADDED
+            # self.shoot_sound.play()
+            enemyBulletBody.userData = {'type': 'enemy_bullet'}
+            enemyBulletBody.linearVelocity = (0, ENEMY_BULLET_SPEED)
+            self.enemy_bullets.append(enemyBulletBody)
         pass
 
     def update_enemies(self):
         for x in self.enemies:
-            if (x.linearVelocity == (0, 0)):
-                x.linearVelocity = (10, 0)
-            elif int(x.position.x) in range(77, 100):
-                x.linearVelocity = (-10, 0)
-            elif int(x.position.x) in range(-10, 3):
-                x.linearVelocity = (10, 0)
+            if (x):
+                if (x.linearVelocity == (0, 0)):
+                    x.linearVelocity = (ENEMY_SPEED, 0)
+                elif int(x.position.x) in range(77, 100):
+                    x.linearVelocity = (-ENEMY_SPEED, 1)
+                elif int(x.position.x) in range(-10, 3):
+                    x.linearVelocity = (ENEMY_SPEED, 1)
+                elif int(x.position.y) in range(35, 40):
+                    x.linearVelocity = (x.linearVelocity.x, -5)
         pass
 
     def update_bullets(self):
@@ -138,16 +152,30 @@ class Galaga:
                 fixture_a, fixture_b = contact.fixtureA, contact.fixtureB
                 body_a, body_b = fixture_a.body, fixture_b.body
                 
-                if body_a.userData['type'] == 'player' and (body_b.userData['type'] == 'enemy' or body_b.userData['type'] == 'enemy_bullet'):
+                if body_a.userData['type'] == 'player' and body_b.userData['type'] == 'enemy':
                     self.world.DestroyBody(body_b)
                     self.enemies.remove(body_b)
                     self.player_lives -= 1
                     if self.player_lives <= 0:
                         self.running = False
                         return
-                elif (body_a.userData['type'] == 'enemy' or body_a.userData['type'] == 'enemy_bullet') and body_b.userData['type'] == 'player':
+                elif body_a.userData['type'] == 'enemy' and body_b.userData['type'] == 'player':
                     self.world.DestroyBody(body_a)
                     self.enemies.remove(body_a)
+                    self.player_lives -= 1
+                    if self.player_lives <= 0:
+                        self.running = False
+                        return
+                elif body_a.userData['type'] == 'player' and body_b.userData['type'] == 'enemy_bullet':
+                    self.world.DestroyBody(body_b)
+                    self.enemy_bullets.remove(body_b)
+                    self.player_lives -= 1
+                    if self.player_lives <= 0:
+                        self.running = False
+                        return
+                elif body_a.userData['type'] == 'enemy_bullet' and body_b.userData['type'] == 'player':
+                    self.world.DestroyBody(body_a)
+                    self.enemy_bullets.remove(body_a)
                     self.player_lives -= 1
                     if self.player_lives <= 0:
                         self.running = False
@@ -184,6 +212,10 @@ class Galaga:
             #pygame.draw.polygon(self.screen, (0, 0, 255), vertices)
             self.screen.blit(self.enemy_image, vertices[0])
 
+        for enemyBullet in self.enemy_bullets:
+            vertices = [(enemyBullet.transform * vertex) * PPM for vertex in enemyBullet.fixtures[0].shape.vertices]
+            #pygame.draw.polygon(self.screen, (0, 0, 255), vertices)
+            self.screen.blit(self.enemy_bullet_image, vertices[0])
 
         #vertices = [(self.tempBody.transform * vertex) * PPM for vertex in self.tempBody.fixtures[0].shape.vertices]
         #pygame.draw.polygon(self.screen, (255, 0, 0), vertices)
