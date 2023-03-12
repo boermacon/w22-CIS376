@@ -31,6 +31,7 @@ class Galaga:
         self.player_bullet_image = pygame.image.load('missile.png').convert_alpha()
         self.enemy_bullet_image = pygame.image.load('missile.png').convert_alpha()
         self.enemy_bullet_image = pygame.transform.rotate(self.enemy_bullet_image, 180)
+        self.enemy_shoot_sound = pygame.mixer.Sound('blaster-2.mp3')
         #self.shoot_sound = pygame.mixer.Sound('shoot.wav')
         #self.explosion_sound = pygame.mixer.Sound('explosion.wav')
 
@@ -118,10 +119,9 @@ class Galaga:
         if (self.enemies[randNum] and chanceToShoot <= ENEMY_SHOOT_PERCENTAGE):
             enemyBulletBody = self.world.CreateKinematicBody(position=(self.enemies[randNum].position.x + 0.25, self.enemies[randNum].position.y + 0.5))
             enemyBulletBody.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(10/PPM,10/PPM)),density=1,friction=0.3))
-            #MAKE SURE THIS CODE IS ADDED
-            # self.shoot_sound.play()
             enemyBulletBody.userData = {'type': 'enemy_bullet'}
             enemyBulletBody.linearVelocity = (0, ENEMY_BULLET_SPEED)
+            self.enemy_shoot_sound.play()
             self.enemy_bullets.append(enemyBulletBody)
         pass
 
