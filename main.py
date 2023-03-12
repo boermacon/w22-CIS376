@@ -56,6 +56,9 @@ class Galaga:
         self.player_bullets = []
         self.gameState = 0
         self.running = True
+        
+        # List to hold pressed keys
+        self.keys = []
 
         # Play music
         pygame.mixer.music.load('8-bit-space-music.mp3')
@@ -69,16 +72,28 @@ class Galaga:
             for event in pygame.event.get():
                 if event.type == QUIT:
                     self.running = False
-                elif event.type == KEYDOWN:
-                    if event.key == K_LEFT:
+                if event.type == KEYDOWN:
+                    if event.key == K_LEFT and K_RIGHT not in self.keys:
+                        if K_LEFT not in self.keys:
+                            self.keys.append(K_LEFT)
+
                         self.player_body.linearVelocity = (-PLAYER_SPEED, 0)
-                    elif event.key == K_RIGHT:
+                    elif event.key == K_RIGHT and K_LEFT not in self.keys:
+                        if K_RIGHT not in self.keys:
+                            self.keys.append(K_RIGHT)
+
                         self.player_body.linearVelocity = (PLAYER_SPEED, 0)
                     elif event.key == K_SPACE:
                         self.fire_player_bullet()
-                elif event.type == KEYUP:
-                    if event.key in (K_LEFT, K_RIGHT):
+                if event.type == KEYUP:
+                    if event.key == K_RIGHT and K_RIGHT in self.keys:
+                        self.keys.pop(self.keys.index(K_RIGHT))
+                    if event.key == K_LEFT and K_LEFT in self.keys:
+                        self.keys.pop(self.keys.index(K_LEFT))
+                    print(self.keys)
+                    if not self.keys:
                         self.player_body.linearVelocity = (0, 0)
+                        
             if int(self.player_body.position.x) in range(-10, 4) and self.player_body.linearVelocity == (-PLAYER_SPEED, 0):
                 self.player_body.linearVelocity = (0, 0)
             if int(self.player_body.position.x) in range(76, 100) and self.player_body.linearVelocity == (PLAYER_SPEED, 0):
@@ -112,11 +127,22 @@ class Galaga:
         return myEnemies
     
     def fire_player_bullet(self):
-        #MAKE SURE THIS CODE IS ADDED
-        #self.shoot_sound.play()
-        #enemyBulletBody.userData = {'type': 'player_bullet'}
-        pass
+        pygame.mixer.Sound.stop(self.shoot_sound) # Stopping any previous shooting sound
 
+        # Creating offest to align bullet to player
+        offset_x = 0.75
+        offset_y = 2.5
+
+        # Creating bullet body
+        bullet = self.world.CreateKinematicBody(position=(self.player_body.position[0] + offset_x, ((self.player_body.position[1] + offset_y) * 0.9)))
+        bullet.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(25/PPM,25/PPM)),density=1,friction=0.3))
+        bullet.userData = {'type': 'player_bullet'}
+        self.player_bullets.append(bullet)
+        
+        bullet.linearVelocity = (0, -70) # Setting bullets Y-velocity
+
+        pygame.mixer.Sound.play(self.shoot_sound) # Initiating shooting sound
+        
     def fire_enemy_bullet(self):
         """Method that handles enemy bullet firing."""
         #Select a random enemy and fire a bullet based on a percentage.
@@ -235,6 +261,11 @@ class Galaga:
         for enemyBullet in self.enemy_bullets:
             vertices = [(enemyBullet.transform * vertex) * PPM for vertex in enemyBullet.fixtures[0].shape.vertices]
             self.screen.blit(self.enemy_bullet_image, vertices[0])
+            
+        # Drawing player bullets
+        for bullet in self.player_bullets:
+            vertices = [(bullet.transform * vertex) * PPM for vertex in bullet.fixtures[0].shape.vertices]
+            self.screen.blit(self.player_bullet_image, vertices[0])
 
         # Draw / update screen
         self.world.DrawDebugData()
