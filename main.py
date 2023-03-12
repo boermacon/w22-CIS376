@@ -57,6 +57,7 @@ class Galaga:
         self.enemy_bullets = []
         self.player_bullets = []
 
+        self.gameState = 0
         self.running = True
 
         self.loop()
@@ -87,15 +88,15 @@ class Galaga:
             self.world.Step(time_step, velocity_iterations, position_iterations)
             
             self.update_enemies()
-            self.update_bullets()
             self.check_collisions()
+            self.gameState = self.check_game_state()
             self.draw_scene()
 
             self.fire_enemy_bullet()
             
             self.clock.tick(FPS)
         
-        pygame.quit()
+        self.endGame()
 
     def spawn_enemies(self):
         myEnemies = []
@@ -140,50 +141,51 @@ class Galaga:
                     x.linearVelocity = (ENEMY_SPEED, 1)
                 elif int(x.position.y) in range(35, 40):
                     x.linearVelocity = (x.linearVelocity.x, -5)
-        pass
 
-    def update_bullets(self):
-        #update player bullets that go up
-        #update enemy bullest that go down
-
-        pass
+    def check_game_state(self):
+        """Method to check and return the state of the game. Takes self as input. Outputs integer 0 for running, 1 for loss, and 2 for win."""
+        # Check if lives and return loss if no lives
+        if self.player_lives <= 0:
+            self.running = False
+            return 1
+        # Check if there are enemies and return win if there are no enemies
+        elif len(self.enemies) <= 0:
+            self.running = False
+            return 2
+        # Return running as there is no win or loss
+        else:
+            return 0
 
     def check_collisions(self):
-        #self.explosion_sound.play()
+        """Method to check collisions in the game. Takes self as input."""
+        # Loop for all current contacts
         for contact in self.world.contacts:
-            print("Contact")
+            # If contacts are currently touching get their fixtures and bodies
             if contact.touching:
                 fixture_a, fixture_b = contact.fixtureA, contact.fixtureB
                 body_a, body_b = fixture_a.body, fixture_b.body
                 
+                # Check if a player as collided with an enemy -> destroy enemey and remove a life
                 if body_a.userData['type'] == 'player' and body_b.userData['type'] == 'enemy':
                     self.world.DestroyBody(body_b)
                     self.enemies.remove(body_b)
                     self.player_lives -= 1
-                    if self.player_lives <= 0:
-                        self.running = False
-                        return
                 elif body_a.userData['type'] == 'enemy' and body_b.userData['type'] == 'player':
                     self.world.DestroyBody(body_a)
                     self.enemies.remove(body_a)
                     self.player_lives -= 1
-                    if self.player_lives <= 0:
-                        self.running = False
-                        return
+
+                # Check if a player has collided with an enemy bullet -> destroy enemy bullet and remove a life
                 elif body_a.userData['type'] == 'player' and body_b.userData['type'] == 'enemy_bullet':
                     self.world.DestroyBody(body_b)
                     self.enemy_bullets.remove(body_b)
                     self.player_lives -= 1
-                    if self.player_lives <= 0:
-                        self.running = False
-                        return
                 elif body_a.userData['type'] == 'enemy_bullet' and body_b.userData['type'] == 'player':
                     self.world.DestroyBody(body_a)
                     self.enemy_bullets.remove(body_a)
                     self.player_lives -= 1
-                    if self.player_lives <= 0:
-                        self.running = False
-                        return
+                
+                # Check if an enemey has collided with a player bullet -> destroy both entities and increase points
                 elif body_a.userData['type'] == 'player_bullet' and body_b.userData['type'] == 'enemy':
                     self.world.DestroyBody(body_a)
                     self.player_bullets.remove(body_a)
@@ -198,36 +200,79 @@ class Galaga:
                     self.player_score += ENEMY_POINTS
 
     def draw_scene(self):
+        """Method to draw screen during main game loop. Takes self as input."""
+        # Clear screen as black
         self.screen.fill((0, 0, 0))
         
+        # Display lives in top left corner
         for life in range(self.player_lives):
             self.screen.blit(self.player_image, (20 + life * 30, 20))
         
+        # Display Score in top right corner
         score_text = self.font.render(f"Score: {self.player_score}", True, (255, 255, 255))
         self.screen.blit(score_text, (SCREEN_WIDTH - score_text.get_width() - 20, 20))
         
         # Draw the player body
+        # Get vertices from player body's fixture and display image at those vertices
         vertices = [(self.player_body.transform * vertex) * PPM for vertex in self.player_body.fixtures[0].shape.vertices]
-        #pygame.draw.polygon(self.screen, (0, 0, 255), vertices)
         self.screen.blit(self.player_image, vertices[0])
         
+        # Draw enemies using principles of player body rendering in a loop
         for enemy in self.enemies:
             vertices = [(enemy.transform * vertex) * PPM for vertex in enemy.fixtures[0].shape.vertices]
-            #pygame.draw.polygon(self.screen, (0, 0, 255), vertices)
             self.screen.blit(self.enemy_image, vertices[0])
 
+        # Draw enemy bullets using principles from player body rendering in a loop
         for enemyBullet in self.enemy_bullets:
             vertices = [(enemyBullet.transform * vertex) * PPM for vertex in enemyBullet.fixtures[0].shape.vertices]
-            #pygame.draw.polygon(self.screen, (0, 0, 255), vertices)
             self.screen.blit(self.enemy_bullet_image, vertices[0])
 
-        #vertices = [(self.tempBody.transform * vertex) * PPM for vertex in self.tempBody.fixtures[0].shape.vertices]
-        #pygame.draw.polygon(self.screen, (255, 0, 0), vertices)
-
+        # Draw / update screen
         self.world.DrawDebugData()
         pygame.display.flip()
-        
+    
+    def endGame(self):
+        """Method to handle endscreen display. Takes self as input"""
+        #Loop until exit
+        while True:
+            #Check for exit
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+            
+            #Blank Screen and new font size
+            fontSize = 50
+            self.screen.fill((0, 0, 0))
+            self.font = pygame.font.Font(None, fontSize)
+            
+            #If we lost
+            if self.gameState == 1:
+                # Render loss text
+                text_surface = self.font.render("You Lost", True, (255, 255, 255))
+                text_rect = text_surface.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
+                self.screen.blit(text_surface, text_rect)
 
+                # Render score 'fontSize' distance below above text
+                text_surface = self.font.render("Score: " + str(self.player_score), True, (255, 255, 255))
+                text_rect = text_surface.get_rect(center=(SCREEN_WIDTH / 2, (SCREEN_HEIGHT / 2) + fontSize))
+                self.screen.blit(text_surface, text_rect)
+            
+            #If we won    
+            elif self.gameState == 2:
+                # Render win text
+                text_surface = self.font.render("You Won", True, (255, 255, 255))
+                text_rect = text_surface.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
+                self.screen.blit(text_surface, text_rect)
+
+                # Render score 'fontSize' distance below above text
+                text_surface = self.font.render("Score: " + str(self.player_score), True, (255, 255, 255))
+                text_rect = text_surface.get_rect(center=(SCREEN_WIDTH / 2, (SCREEN_HEIGHT / 2) + fontSize))
+                self.screen.blit(text_surface, text_rect)
+
+            # Flip the display
+            pygame.display.flip()
+
+# Python start code
 if __name__ == '__main__':
     game = Galaga()
     game.run()      
