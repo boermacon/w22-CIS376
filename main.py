@@ -91,10 +91,11 @@ class Galaga:
         myEnemies = []
 
         #Loop this to create all enemies
-        newEnemy = self.world.CreateKinematicBody(position=(1300 / PPM, int((SCREEN_HEIGHT / PPM) * 0.9)))
-        newEnemy.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(25/PPM,25/PPM)),density=1,friction=0.3))
-        newEnemy.userData = {'type': 'enemy'}
-        myEnemies.append(newEnemy)
+        for i in range(10):
+            newEnemy = self.world.CreateKinematicBody(position=((200 + (i*133)) / PPM, int((SCREEN_HEIGHT / PPM) * 0.2)))
+            newEnemy.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(25/PPM,25/PPM)),density=1,friction=0.3))
+            newEnemy.userData = {'type': 'enemy'}
+            myEnemies.append(newEnemy)
         
         return myEnemies
     
@@ -114,6 +115,13 @@ class Galaga:
         pass
 
     def update_enemies(self):
+        for x in self.enemies:
+            if (x.linearVelocity == (0, 0)):
+                x.linearVelocity = (10, 0)
+            elif int(x.position.x) in range(77, 100):
+                x.linearVelocity = (-10, 0)
+            elif int(x.position.x) in range(-10, 3):
+                x.linearVelocity = (10, 0)
         pass
 
     def update_bullets(self):
