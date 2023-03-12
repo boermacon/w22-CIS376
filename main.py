@@ -76,6 +76,10 @@ class Galaga:
                 elif event.type == KEYUP:
                     if event.key in (K_LEFT, K_RIGHT):
                         self.player_body.linearVelocity = (0, 0)
+            if int(self.player_body.position.x) in range(-10, 4) and self.player_body.linearVelocity == (-PLAYER_SPEED, 0):
+                self.player_body.linearVelocity = (0, 0)
+            if int(self.player_body.position.x) in range(76, 100) and self.player_body.linearVelocity == (PLAYER_SPEED, 0):
+                self.player_body.linearVelocity = (0, 0)
             
             time_step = 1.0 / 60.0
             velocity_iterations = 6
