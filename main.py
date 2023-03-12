@@ -128,6 +128,12 @@ class Galaga:
             enemyBulletBody.linearVelocity = (0, ENEMY_BULLET_SPEED)
             self.enemy_shoot_sound.play()
             self.enemy_bullets.append(enemyBulletBody)
+
+        #Destroys bullets that have gone off the bottom of the screen.
+        for x in self.enemy_bullets:
+            if x.position.y >= 70:
+                self.world.DestroyBody(x)
+                self.enemy_bullets.remove(x)
         pass
 
     def update_enemies(self):
@@ -167,7 +173,7 @@ class Galaga:
                 fixture_a, fixture_b = contact.fixtureA, contact.fixtureB
                 body_a, body_b = fixture_a.body, fixture_b.body
                 
-                # Check if a player as collided with an enemy -> destroy enemey and remove a life
+                # Check if a player as collided with an enemy -> destroy enemy and remove a life
                 if body_a.userData['type'] == 'player' and body_b.userData['type'] == 'enemy':
                     self.world.DestroyBody(body_b)
                     self.enemies.remove(body_b)
