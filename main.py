@@ -17,10 +17,15 @@ FPS = 60
 ENEMY_POINTS = 10
 
 class Galaga:
+    """Class for a Galaga Game recreation."""
     def __init__(self):
+        """Constructor for Galaga class."""
+        # Initizalize pygame, clock, and mixer
         pygame.init()
         self.clock = pygame.time.Clock()
         pygame.mixer.init()
+
+        # Set Display dimensions, font size, and window caption
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.font = pygame.font.Font(None, 30)
         pygame.display.set_caption("Galaga")
@@ -35,32 +40,28 @@ class Galaga:
         #self.shoot_sound = pygame.mixer.Sound('shoot.wav')
         #self.explosion_sound = pygame.mixer.Sound('explosion.wav')
 
+        # Create a world
         self.world = b2World(gravity=(0, 0))
-        
-        #self.ground_body = self.world.CreateStaticBody(position=(0, -10),shapes=b2PolygonShape(box=(50, 10)),)
-        #self.body.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(25/PPM,25/PPM)),density=1,friction=0.3))
-        
-        #self.tempBody = self.world.CreateStaticBody(position=(100/PPM, 0))
-        #self.tempBody.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(10/PPM, SCREEN_HEIGHT/PPM)),density=1,friction=0.3))
 
         # Create a dynamic body
         self.player_body = self.world.CreateDynamicBody(position=(SCREEN_WIDTH / 2 / PPM, int((SCREEN_HEIGHT / PPM) * 0.9)))
         self.player_body.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(25/PPM,25/PPM)),density=1,friction=0.3,isSensor=True))
         self.player_body.userData = {'type': 'player'}
-        #fixedRotation=True
         
+        # Set player lives, score, enemies, bullet holder lists, game state, andrunning state
         self.player_lives = PLAYER_LIVES
         self.player_score = 0
         self.enemies = self.spawn_enemies()
-        # self.enemies = []
-        # Call spawn enemey call
         self.enemy_bullets = []
         self.player_bullets = []
-
         self.gameState = 0
         self.running = True
+
+        # Play music
         pygame.mixer.music.load('8-bit-space-music.mp3')
         pygame.mixer.music.play(-1)
+
+        # Run the loop method
         self.loop()
 
     def loop(self):
