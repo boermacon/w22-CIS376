@@ -37,6 +37,7 @@ class Galaga:
         self.enemy_bullet_image = pygame.image.load('missile.png').convert_alpha()
         self.enemy_bullet_image = pygame.transform.rotate(self.enemy_bullet_image, 180)
         self.enemy_shoot_sound = pygame.mixer.Sound('blaster-2.mp3')
+        self.shoot_sound = pygame.mixer.Sound('blaster-2.mp3')
         #self.shoot_sound = pygame.mixer.Sound('shoot.wav')
         #self.explosion_sound = pygame.mixer.Sound('explosion.wav')
 
