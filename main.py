@@ -70,50 +70,68 @@ class Galaga:
         self.loop()
 
     def loop(self):
+        """Core Game Loop for game. Takes self as input."""
+        # Loop 
         while self.running:
+            # The loop waits for events
             for event in pygame.event.get():
+                # The loop checks for QUIT event
                 if event.type == QUIT:
                     self.running = False
+
+                # The loop checks for KEYDOWN event
                 if event.type == KEYDOWN:
+                    # The loop checks for LEFT arrow key and no RIGHT arrow key press
                     if event.key == K_LEFT and K_RIGHT not in self.keys:
+                        # If LEFT arrow key press detected, it adds to the list of keys pressed
                         if K_LEFT not in self.keys:
                             self.keys.append(K_LEFT)
-
                         self.player_body.linearVelocity = (-PLAYER_SPEED, 0)
+                    
+                    # The loop checks for RIGHT arrow key and no LEFT arrow key press
                     elif event.key == K_RIGHT and K_LEFT not in self.keys:
+                        # If RIGHT arrow key press detected, it adds to the list of keys pressed
                         if K_RIGHT not in self.keys:
                             self.keys.append(K_RIGHT)
-
                         self.player_body.linearVelocity = (PLAYER_SPEED, 0)
+
+                    # Call player bullet method if space is pressed
                     elif event.key == K_SPACE:
                         self.fire_player_bullet()
+
+                # Check for key releases and remove keys from the saved list
                 if event.type == KEYUP:
                     if event.key == K_RIGHT and K_RIGHT in self.keys:
                         self.keys.pop(self.keys.index(K_RIGHT))
                     if event.key == K_LEFT and K_LEFT in self.keys:
                         self.keys.pop(self.keys.index(K_LEFT))
-                    #print(self.keys)
                     if not self.keys:
                         self.player_body.linearVelocity = (0, 0)
-                        
+
+            # Stops player from going out of screen on the left     
             if int(self.player_body.position.x) in range(-10, 4) and self.player_body.linearVelocity == (-PLAYER_SPEED, 0):
                 self.player_body.linearVelocity = (0, 0)
+            # Stops player from going out of screen on the right
             if int(self.player_body.position.x) in range(76, 100) and self.player_body.linearVelocity == (PLAYER_SPEED, 0):
                 self.player_body.linearVelocity = (0, 0)
             
+            # Iterate physics within Box2D
             time_step = 1.0 / 60.0
             velocity_iterations = 6
             position_iterations = 2
             self.world.Step(time_step, velocity_iterations, position_iterations)
             
+            # Perform update and checking methods
             self.fire_enemy_bullet()
             self.update_enemies()
             self.check_collisions()
             self.gameState = self.check_game_state()
             self.draw_scene()
 
+            # Limit frame rate
             self.clock.tick(FPS)
         
+        # Call the end screen method
         self.endGame()
 
     def spawn_enemies(self):
@@ -132,21 +150,27 @@ class Galaga:
         return myEnemies
     
     def fire_player_bullet(self):
-        pygame.mixer.Sound.stop(self.shoot_sound) # Stopping any previous shooting sound
+        """Method to fire/generate a player bullet. Takes self as input."""
+        # Stopping any previous shooting sound
+        pygame.mixer.Sound.stop(self.shoot_sound) 
 
         # Creating offest to align bullet to player
-        offset_x = 0.75
+        offset_x = 0
         offset_y = 2.5
 
         # Creating bullet body
         bullet = self.world.CreateDynamicBody(position=(self.player_body.position[0] + offset_x, ((self.player_body.position[1] + offset_y) * 0.9)))
         bullet.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(25/PPM,25/PPM)),density=1,friction=0.3))
         bullet.userData = {'type': 'player_bullet'}
+
+        # Append to player bullet list
         self.player_bullets.append(bullet)
         
-        bullet.linearVelocity = (0, -70) # Setting bullets Y-velocity
+        # Setting bullets Y-velocity
+        bullet.linearVelocity = (0, -70) 
 
-        pygame.mixer.Sound.play(self.shoot_sound) # Initiating shooting sound
+        # Initiating shooting sound
+        pygame.mixer.Sound.play(self.shoot_sound) 
         
     def fire_enemy_bullet(self):
         """Method that handles enemy bullet firing. Takes self as input"""
@@ -172,7 +196,7 @@ class Galaga:
                 self.enemy_bullets.remove(x)
 
     def update_enemies(self):
-        """Method that handles enemy movement."""
+        """Method that handles enemy movement. Takes self as input."""
         #Loop that adjusts velocity for each enemy depending on their x,y position.
         for x in self.enemies:
             if (x):
