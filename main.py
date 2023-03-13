@@ -9,7 +9,7 @@ SCREEN_WIDTH, SCREEN_HEIGHT = 1600, 900
 PPM = 20
 PLAYER_SPEED = 30
 ENEMY_SPEED = 10
-PLAYER_BULLET_SPEED = 10
+PLAYER_BULLET_SPEED = -25
 ENEMY_BULLET_SPEED = 5
 ENEMY_SHOOT_PERCENTAGE = 3
 PLAYER_LIVES = 3
@@ -170,19 +170,19 @@ class Galaga:
         pygame.mixer.Sound.stop(self.shoot_sound) 
 
         # Creating offest to align bullet to player
-        offset_x = 1.15
+        offset_x = -0.1
         offset_y = 2.5
 
         # Creating bullet body
         bullet = self.world.CreateDynamicBody(position=(self.player_body.position[0] + offset_x, ((self.player_body.position[1] + offset_y) * 0.9)))
-        bullet.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(25/PPM,25/PPM)),density=1,friction=0.3))
+        bullet.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(2/PPM,3/PPM)),density=1,friction=0.3))
         bullet.userData = {'type': 'player_bullet'}
 
         # Append to player bullet list
         self.player_bullets.append(bullet)
         
         # Setting bullets Y-velocity
-        bullet.linearVelocity = (0, -70) 
+        bullet.linearVelocity = (0, PLAYER_BULLET_SPEED) 
 
         # Initiating shooting sound
         pygame.mixer.Sound.play(self.shoot_sound)
@@ -194,13 +194,13 @@ class Galaga:
             exit(-1)
 
         #Select a random enemy and fire a bullet based on a percentage.
-        offset_x = 0.25
-        offset_y = 0.5
+        offset_x = -0.1
+        offset_y = 1.75
         randNum = random.randint(0, (len(self.enemies)-1))
         chanceToShoot = random.randint(0, 100)
         if (self.enemies[randNum] and chanceToShoot <= ENEMY_SHOOT_PERCENTAGE):
             enemyBulletBody = self.world.CreateKinematicBody(position=(self.enemies[randNum].position.x + offset_x, self.enemies[randNum].position.y + offset_y))
-            enemyBulletBody.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(2/PPM,5/PPM)),density=1,friction=0.3))
+            enemyBulletBody.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(2/PPM,3/PPM)),density=1,friction=0.3))
             enemyBulletBody.userData = {'type': 'enemy_bullet'}
             enemyBulletBody.linearVelocity = (0, ENEMY_BULLET_SPEED)
             self.enemy_shoot_sound.play()
