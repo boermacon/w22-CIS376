@@ -127,12 +127,27 @@ class Galaga:
             self.check_collisions()
             self.gameState = self.check_game_state()
             self.draw_scene()
+            self.bullet_cleanup()
 
             # Limit frame rate
             self.clock.tick(FPS)
         
         # Call the end screen method
         self.endGame()
+
+    def bullet_cleanup(self):
+        """Method that handles bullet cleanup. Takes self as input."""
+        #Destroys player bullets that have gone off the top of the screen.
+        for x in self.player_bullets:
+            if x.position.y <= 0:
+                self.world.DestroyBody(x)
+                self.player_bullets.remove(x)
+
+        #Destroys enemy bullets that have gone off the bottom of the screen.
+        for x in self.enemy_bullets:
+            if x.position.y >= 70:
+                self.world.DestroyBody(x)
+                self.enemy_bullets.remove(x)
 
     def spawn_enemies(self):
         """Method that handles enemy generation. Takes self as input. Outputs a list of (kinematic) bodies."""
@@ -155,7 +170,7 @@ class Galaga:
         pygame.mixer.Sound.stop(self.shoot_sound) 
 
         # Creating offest to align bullet to player
-        offset_x = 0
+        offset_x = 1.15
         offset_y = 2.5
 
         # Creating bullet body
@@ -170,7 +185,7 @@ class Galaga:
         bullet.linearVelocity = (0, -70) 
 
         # Initiating shooting sound
-        pygame.mixer.Sound.play(self.shoot_sound) 
+        pygame.mixer.Sound.play(self.shoot_sound)
         
     def fire_enemy_bullet(self):
         """Method that handles enemy bullet firing. Takes self as input"""
@@ -179,21 +194,17 @@ class Galaga:
             exit(-1)
 
         #Select a random enemy and fire a bullet based on a percentage.
+        offset_x = 0.25
+        offset_y = 0.5
         randNum = random.randint(0, (len(self.enemies)-1))
         chanceToShoot = random.randint(0, 100)
         if (self.enemies[randNum] and chanceToShoot <= ENEMY_SHOOT_PERCENTAGE):
-            enemyBulletBody = self.world.CreateKinematicBody(position=(self.enemies[randNum].position.x + 0.25, self.enemies[randNum].position.y + 0.5))
+            enemyBulletBody = self.world.CreateKinematicBody(position=(self.enemies[randNum].position.x + offset_x, self.enemies[randNum].position.y + offset_y))
             enemyBulletBody.CreateFixture(Box2D.b2FixtureDef(shape=Box2D.b2PolygonShape(box=(2/PPM,5/PPM)),density=1,friction=0.3))
             enemyBulletBody.userData = {'type': 'enemy_bullet'}
             enemyBulletBody.linearVelocity = (0, ENEMY_BULLET_SPEED)
             self.enemy_shoot_sound.play()
             self.enemy_bullets.append(enemyBulletBody)
-
-        #Destroys bullets that have gone off the bottom of the screen.
-        for x in self.enemy_bullets:
-            if x.position.y >= 70:
-                self.world.DestroyBody(x)
-                self.enemy_bullets.remove(x)
 
     def update_enemies(self):
         """Method that handles enemy movement. Takes self as input."""
@@ -291,7 +302,7 @@ class Galaga:
         
         # Display Score in top right corner
         score_text = self.font.render(f"Score: {self.player_score}", True, (255, 255, 255))
-        self.screen.blit(score_text, (SCREEN_WIDTH - score_text.get_width() - 20, 20))
+        self.screen.blit(score_text, (SCREEN_WIDTH - score_text.get_width() - 50, 20))
         
         # Draw the player body
         # Get vertices from player body's fixture and display image at those vertices
