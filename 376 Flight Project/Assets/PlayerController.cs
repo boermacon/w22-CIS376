@@ -50,6 +50,8 @@ public class PlayerController : MonoBehaviour
     public float verticalMovement;
     private float distToGround = 0.2f;
 
+    private float maxSpeed = 40;
+
     private Animator animator;
 
     // Start is called before the first frame update
@@ -108,9 +110,10 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetBool("Jump", false);
         }
-
+        Debug.Log(transform.forward * verticalMovement);
 
         moveDir = transform.forward * verticalMovement + transform.right * horizontalMovement;
+        moveDir.Normalize();
     }
 
     /// <summary>
@@ -158,6 +161,7 @@ public class PlayerController : MonoBehaviour
     private void Move()
     {
         rb.AddForce(moveDir * speed, ForceMode.Impulse);
+        rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxSpeed);
 
         moveDir = new Vector3(0, 0, 0);
         //rb.AddForce(Vector3.SmoothDamp(moveAmount, moveDir * speed, ref smoothMoveVelocity, smoothTime));
