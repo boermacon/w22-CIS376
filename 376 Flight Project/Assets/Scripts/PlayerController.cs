@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour
     public float verticalMovement;
     private float distToGround = 0.2f;
 
-    private float maxSpeed = 40;
+    private float maxSpeed = 20;
 
     private Animator animator;
 
@@ -127,17 +127,6 @@ public class PlayerController : MonoBehaviour
             Move();
             Jump();
         }
-        //rb.velocity = moveAmount;
-        //rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
-        //rb.velocity(Vector3.Lerp(rb.velocity)
-        /*
-        //Allow player to move through the air in a pause state until they are on the ground
-        else if (((int)playerManager.state != 2) && !grounded)
-        {
-            //rb.velocity = moveAmount;
-            rb.MovePosition(rb.position + (transform.TransformDirection(moveAmount) * Time.fixedDeltaTime));
-        }*/
-        
     }
 
     #region Movement
@@ -174,16 +163,6 @@ public class PlayerController : MonoBehaviour
         //Animation.SetFloat("InputX", moveAmount.x);
         //Animation.SetFloat("InputZ", moveAmount.z);
 
-        ///* WIP VELOCITY BASED MOVEMENT
-        //Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
-        //moveDir = transform.TransformDirection(moveDir);
-        //moveAmount = moveDir ;
-        //moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref smoothMoveVelocity, smoothTime);
-        //Tell the animator which direction the character is moving in
-        //Note that this doesn't match perfectly with the movement of the character as that movement was changed from positional changes to velocity changes however there was not enough time to find a solution
-        //Animation.SetFloat("InputX", Input.GetAxisRaw("Horizontal") * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed) * smoothTime);
-        //Animation.SetFloat("InputZ", Input.GetAxisRaw("Vertical") * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed) * smoothTime);
-        //*/
     }
 
     /// <summary>
@@ -199,11 +178,22 @@ public class PlayerController : MonoBehaviour
 
     private bool IsGrounded() {
         RaycastHit hit;
-        //Debug.Log(Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.2f));
         return Physics.Raycast(transform.position, Vector3.down, out hit, distToGround);
     }
 
-private void OnCollisionEnter(Collision collision)
+    private void attack()
+    {
+        if (Input.GetMouseButton(1))
+        {
+            animator.SetBool("Attack1", true);
+            RaycastHit hit;
+            Physics.Raycast(transform.position, Vector3.forward, out hit, distToGround);
+
+            hit.transform.gameObject.GetComponent<Enemy>();
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.tag == "Terrain")
         {
