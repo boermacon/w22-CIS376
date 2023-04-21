@@ -48,13 +48,16 @@ public class PlayerController : MonoBehaviour
 
     public float horizontalMovement;
     public float verticalMovement;
-    private float distToGround;
+    private float distToGround = 0.2f;
+
+    private Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = gameObject.GetComponent<Rigidbody>();
         distToGround = gameObject.GetComponent<MeshCollider>().bounds.extents.y;
+        animator = gameObject.GetComponent<Animator>();
     }
 
     /// <summary>
@@ -64,10 +67,25 @@ public class PlayerController : MonoBehaviour
     {
 
         // This will detect forward and backward movement
-        horizontalMovement = Input.GetAxis("Horizontal");
-
-        // This will detect sideways movement
         verticalMovement = Input.GetAxis("Vertical");
+        if(verticalMovement < 0)
+        {
+            animator.SetBool("WalkForward", false);
+            animator.SetBool("WalkBackward", true);
+        }
+        else if(verticalMovement > 0)
+        {
+            animator.SetBool("WalkForward", true);
+            animator.SetBool("WalkBackward", false);
+        }
+        else
+        {
+            animator.SetBool("WalkForward", false);
+            animator.SetBool("WalkBackward", false);
+        }
+        // This will detect sideways movement
+        horizontalMovement = Input.GetAxis("Horizontal");
+        //
 
         //Make sure that the character only animates the idle animation while paused
         //Animation.SetFloat("InputX", 0);
@@ -82,9 +100,15 @@ public class PlayerController : MonoBehaviour
         //Debug.Log(Input.GetKeyDown(KeyCode.Space));
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            //Debug.Log(transform.up * jumpForce);
+            Debug.Log(transform.up * jumpForce);
             jumpDir = transform.up * jumpForce;
+            animator.SetBool("Jump", true);
         }
+        else
+        {
+            animator.SetBool("Jump", false);
+        }
+
 
         moveDir = transform.forward * verticalMovement + transform.right * horizontalMovement;
     }
@@ -133,7 +157,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        rb.AddForce(moveDir * speed, ForceMode.Force);
+        rb.AddForce(moveDir * speed, ForceMode.Impulse);
 
         moveDir = new Vector3(0, 0, 0);
         //rb.AddForce(Vector3.SmoothDamp(moveAmount, moveDir * speed, ref smoothMoveVelocity, smoothTime));
@@ -164,13 +188,15 @@ public class PlayerController : MonoBehaviour
     private void Jump()
     {
         //Debug.Log(jumpDir);
-        rb.AddForce(jumpDir, ForceMode.Force);
+        rb.AddForce(jumpDir);//, ForceMode.Force);
+        
         jumpDir = new Vector3(0, 0, 0);
     }
 
     private bool IsGrounded() {
+        RaycastHit hit;
         //Debug.Log(Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.2f));
-        return Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.2f);
+        return Physics.Raycast(transform.position, Vector3.down, out hit, distToGround);
     }
 
 private void OnCollisionEnter(Collision collision)
