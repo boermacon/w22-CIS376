@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     #region Vars
     #region Inspector Reference Vars
     [SerializeField] GameObject cameraHolder;
-    [SerializeField] float mouseSenstivity, speed, jumpForce, smoothTime;
+    [SerializeField] public float mouseSenstivity, speed, jumpForce, smoothTime;
     [SerializeField] GameObject itemHolder;
     [SerializeField] GameObject weaponPivot;
     [SerializeField] GameObject Helmet, Body;
@@ -50,7 +50,8 @@ public class PlayerController : MonoBehaviour
     public float verticalMovement;
     private float distToGround = 0.2f;
 
-    private float maxSpeed = 20;
+    public float maxSpeed = 20;
+    public float attackDamage = 1;
 
     private Animator animator;
 
