@@ -138,10 +138,9 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetBool("Jump", false);
         }
-        Debug.Log(transform.forward * verticalMovement);
 
         moveDir = transform.forward * verticalMovement + transform.right * horizontalMovement;
-        moveDir.Normalize();
+        //moveDir.Normalize();
     }
 
     /// <summary>

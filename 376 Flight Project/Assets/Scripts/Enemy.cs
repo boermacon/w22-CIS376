@@ -161,7 +161,7 @@ public class Enemy : MonoBehaviour
         //Debug.Log(Input.GetKeyDown(KeyCode.Space));
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Debug.Log(transform.up * jumpForce);
+            //Debug.Log(transform.up * jumpForce);
             jumpDir = transform.up * jumpForce;
             animator.SetBool("Jump", true);
         }
@@ -169,7 +169,7 @@ public class Enemy : MonoBehaviour
         {
             animator.SetBool("Jump", false);
         }
-        Debug.Log(transform.forward * verticalMovement);
+        //Debug.Log(transform.forward * verticalMovement);
 
         moveDir = transform.forward * verticalMovement + transform.right * horizontalMovement;
         moveDir.Normalize();
