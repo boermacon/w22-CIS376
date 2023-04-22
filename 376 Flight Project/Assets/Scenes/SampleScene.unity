@@ -183,6 +183,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cannabis (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 3443642714986062181, guid: 34e3b72955decb0459eccd533d073f4a, type: 3}
+      propertyPath: m_TagString
+      value: Weed
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34e3b72955decb0459eccd533d073f4a, type: 3}
 --- !u!1001 &56422976
@@ -239,6 +243,10 @@ PrefabInstance:
     - target: {fileID: 3450573464225821451, guid: 9c3361ffd4fc6df42979811281a2b155, type: 3}
       propertyPath: m_Name
       value: Cocaine_Brick (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3450573464225821451, guid: 9c3361ffd4fc6df42979811281a2b155, type: 3}
+      propertyPath: m_TagString
+      value: Cocaine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c3361ffd4fc6df42979811281a2b155, type: 3}
@@ -305,6 +313,10 @@ PrefabInstance:
     - target: {fileID: 6353525710776652414, guid: 2f94e4413081bac49b2e3440d41141da, type: 3}
       propertyPath: m_Name
       value: Meth_Bag (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6353525710776652414, guid: 2f94e4413081bac49b2e3440d41141da, type: 3}
+      propertyPath: m_TagString
+      value: Meth
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f94e4413081bac49b2e3440d41141da, type: 3}
@@ -414,6 +426,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cannabis (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 3443642714986062181, guid: 34e3b72955decb0459eccd533d073f4a, type: 3}
+      propertyPath: m_TagString
+      value: Weed
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34e3b72955decb0459eccd533d073f4a, type: 3}
 --- !u!1001 &373395556
@@ -470,6 +486,10 @@ PrefabInstance:
     - target: {fileID: 3443642714986062181, guid: 34e3b72955decb0459eccd533d073f4a, type: 3}
       propertyPath: m_Name
       value: Cannabis (8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3443642714986062181, guid: 34e3b72955decb0459eccd533d073f4a, type: 3}
+      propertyPath: m_TagString
+      value: Weed
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34e3b72955decb0459eccd533d073f4a, type: 3}
@@ -552,6 +572,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Meth_Bag (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 6353525710776652414, guid: 2f94e4413081bac49b2e3440d41141da, type: 3}
+      propertyPath: m_TagString
+      value: Meth
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f94e4413081bac49b2e3440d41141da, type: 3}
 --- !u!1001 &652170807
@@ -612,6 +636,10 @@ PrefabInstance:
     - target: {fileID: 6353525710776652414, guid: 2f94e4413081bac49b2e3440d41141da, type: 3}
       propertyPath: m_Name
       value: Meth_Bag (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6353525710776652414, guid: 2f94e4413081bac49b2e3440d41141da, type: 3}
+      propertyPath: m_TagString
+      value: Meth
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f94e4413081bac49b2e3440d41141da, type: 3}
@@ -764,6 +792,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cannabis (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 3443642714986062181, guid: 34e3b72955decb0459eccd533d073f4a, type: 3}
+      propertyPath: m_TagString
+      value: Weed
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34e3b72955decb0459eccd533d073f4a, type: 3}
 --- !u!1 &740516998
@@ -894,6 +926,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cocaine_Brick (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 3450573464225821451, guid: 9c3361ffd4fc6df42979811281a2b155, type: 3}
+      propertyPath: m_TagString
+      value: Cocaine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c3361ffd4fc6df42979811281a2b155, type: 3}
 --- !u!1001 &812590074
@@ -950,6 +986,10 @@ PrefabInstance:
     - target: {fileID: 3450573464225821451, guid: 9c3361ffd4fc6df42979811281a2b155, type: 3}
       propertyPath: m_Name
       value: Cocaine_Brick (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3450573464225821451, guid: 9c3361ffd4fc6df42979811281a2b155, type: 3}
+      propertyPath: m_TagString
+      value: Cocaine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c3361ffd4fc6df42979811281a2b155, type: 3}
@@ -1103,6 +1143,10 @@ PrefabInstance:
     - target: {fileID: 3450573464225821451, guid: 9c3361ffd4fc6df42979811281a2b155, type: 3}
       propertyPath: m_Name
       value: Cocaine_Brick (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3450573464225821451, guid: 9c3361ffd4fc6df42979811281a2b155, type: 3}
+      propertyPath: m_TagString
+      value: Cocaine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c3361ffd4fc6df42979811281a2b155, type: 3}
@@ -1264,6 +1308,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Meth_Bag (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 6353525710776652414, guid: 2f94e4413081bac49b2e3440d41141da, type: 3}
+      propertyPath: m_TagString
+      value: Meth
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f94e4413081bac49b2e3440d41141da, type: 3}
 --- !u!1001 &1045879710
@@ -1320,6 +1368,10 @@ PrefabInstance:
     - target: {fileID: 3443642714986062181, guid: 34e3b72955decb0459eccd533d073f4a, type: 3}
       propertyPath: m_Name
       value: Cannabis (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3443642714986062181, guid: 34e3b72955decb0459eccd533d073f4a, type: 3}
+      propertyPath: m_TagString
+      value: Weed
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34e3b72955decb0459eccd533d073f4a, type: 3}
@@ -1398,6 +1450,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cocaine_Brick (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 3450573464225821451, guid: 9c3361ffd4fc6df42979811281a2b155, type: 3}
+      propertyPath: m_TagString
+      value: Cocaine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c3361ffd4fc6df42979811281a2b155, type: 3}
 --- !u!4 &1159758276 stripped
@@ -1464,6 +1520,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Meth_Bag (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 6353525710776652414, guid: 2f94e4413081bac49b2e3440d41141da, type: 3}
+      propertyPath: m_TagString
+      value: Meth
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f94e4413081bac49b2e3440d41141da, type: 3}
 --- !u!1001 &1256548373
@@ -1520,6 +1580,10 @@ PrefabInstance:
     - target: {fileID: 3450573464225821451, guid: 9c3361ffd4fc6df42979811281a2b155, type: 3}
       propertyPath: m_Name
       value: Cocaine_Brick (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3450573464225821451, guid: 9c3361ffd4fc6df42979811281a2b155, type: 3}
+      propertyPath: m_TagString
+      value: Cocaine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c3361ffd4fc6df42979811281a2b155, type: 3}
@@ -1801,6 +1865,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cannabis (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 3443642714986062181, guid: 34e3b72955decb0459eccd533d073f4a, type: 3}
+      propertyPath: m_TagString
+      value: Weed
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34e3b72955decb0459eccd533d073f4a, type: 3}
 --- !u!4 &1828875785 stripped
@@ -1867,6 +1935,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Meth_Bag (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 6353525710776652414, guid: 2f94e4413081bac49b2e3440d41141da, type: 3}
+      propertyPath: m_TagString
+      value: Meth
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f94e4413081bac49b2e3440d41141da, type: 3}
 --- !u!1001 &1888051459
@@ -1928,6 +2000,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Meth_Bag (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 6353525710776652414, guid: 2f94e4413081bac49b2e3440d41141da, type: 3}
+      propertyPath: m_TagString
+      value: Meth
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f94e4413081bac49b2e3440d41141da, type: 3}
 --- !u!1001 &1893507720
@@ -1985,6 +2061,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cannabis (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 3443642714986062181, guid: 34e3b72955decb0459eccd533d073f4a, type: 3}
+      propertyPath: m_TagString
+      value: Weed
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34e3b72955decb0459eccd533d073f4a, type: 3}
 --- !u!1001 &1928121589
@@ -2041,6 +2121,10 @@ PrefabInstance:
     - target: {fileID: 3450573464225821451, guid: 9c3361ffd4fc6df42979811281a2b155, type: 3}
       propertyPath: m_Name
       value: Cocaine_Brick (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3450573464225821451, guid: 9c3361ffd4fc6df42979811281a2b155, type: 3}
+      propertyPath: m_TagString
+      value: Cocaine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c3361ffd4fc6df42979811281a2b155, type: 3}
@@ -2102,6 +2186,10 @@ PrefabInstance:
     - target: {fileID: 6353525710776652414, guid: 2f94e4413081bac49b2e3440d41141da, type: 3}
       propertyPath: m_Name
       value: Meth_Bag (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6353525710776652414, guid: 2f94e4413081bac49b2e3440d41141da, type: 3}
+      propertyPath: m_TagString
+      value: Meth
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f94e4413081bac49b2e3440d41141da, type: 3}
@@ -2195,6 +2283,10 @@ PrefabInstance:
     - target: {fileID: 3443642714986062181, guid: 34e3b72955decb0459eccd533d073f4a, type: 3}
       propertyPath: m_Name
       value: Cannabis (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3443642714986062181, guid: 34e3b72955decb0459eccd533d073f4a, type: 3}
+      propertyPath: m_TagString
+      value: Weed
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34e3b72955decb0459eccd533d073f4a, type: 3}
@@ -4293,6 +4385,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Meth_Bag
       objectReference: {fileID: 0}
+    - target: {fileID: 6353525710776652414, guid: 2f94e4413081bac49b2e3440d41141da, type: 3}
+      propertyPath: m_TagString
+      value: Meth
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f94e4413081bac49b2e3440d41141da, type: 3}
 --- !u!4 &2513093609569312712
@@ -5477,6 +5573,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cocaine_Brick
       objectReference: {fileID: 0}
+    - target: {fileID: 3450573464225821451, guid: 9c3361ffd4fc6df42979811281a2b155, type: 3}
+      propertyPath: m_TagString
+      value: Cocaine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c3361ffd4fc6df42979811281a2b155, type: 3}
 --- !u!1 &3681047163122308639
@@ -5549,6 +5649,10 @@ PrefabInstance:
     - target: {fileID: 3443642714986062181, guid: 34e3b72955decb0459eccd533d073f4a, type: 3}
       propertyPath: m_Name
       value: Cannabis
+      objectReference: {fileID: 0}
+    - target: {fileID: 3443642714986062181, guid: 34e3b72955decb0459eccd533d073f4a, type: 3}
+      propertyPath: m_TagString
+      value: Weed
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34e3b72955decb0459eccd533d073f4a, type: 3}
@@ -9776,6 +9880,7 @@ GameObject:
   - component: {fileID: 8709466213510464457}
   - component: {fileID: 8709466213510464459}
   - component: {fileID: 8709466213510464460}
+  - component: {fileID: 8709466213510464461}
   m_Layer: 0
   m_Name: PlayerBear
   m_TagString: Player
@@ -9840,6 +9945,105 @@ MonoBehaviour:
   verticalMovement: 0
   maxSpeed: 20
   attackDamage: 1
+  audioClipC: {fileID: 8300000, guid: 34699fe079404ef4eb74b1aa084e5c5a, type: 3}
+  audioClipW: {fileID: 8300000, guid: 8bab52338b8d7db4cbbeb0ca9c2b155e, type: 3}
+  audioClipM: {fileID: 8300000, guid: 8c8499502cab193418c8dd77c2c7a0ec, type: 3}
+--- !u!82 &8709466213510464461
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8709466213510464452}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!4 &8730113977943184046
 Transform:
   m_ObjectHideFlags: 0
