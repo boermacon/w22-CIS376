@@ -86,6 +86,7 @@ public class Enemy : MonoBehaviour
     {
         currentState = State.SEARCHING;
         nav.isStopped = true;
+
         yield return new WaitForSeconds(2);
     }
 
