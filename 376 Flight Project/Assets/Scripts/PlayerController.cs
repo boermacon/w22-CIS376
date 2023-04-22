@@ -55,12 +55,39 @@ public class PlayerController : MonoBehaviour
 
     private Animator animator;
 
+    public AudioClip audioClipC;
+    public AudioClip audioClipW;
+    public AudioClip audioClipM;
+    private AudioSource audioSource;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = gameObject.GetComponent<Rigidbody>();
         distToGround = gameObject.GetComponent<MeshCollider>().bounds.extents.y;
         animator = gameObject.GetComponent<Animator>();
+
+        audioSource = GetComponent<AudioSource>();
+    }
+
+    // Is called when bear collides with another object
+    void OnTriggerEnter (Collider other)
+    {
+        if (other.CompareTag("Cocaine"))
+        {
+            audioSource.clip = audioClipC;
+            audioSource.Play();
+        }
+        if (other.CompareTag("Weed"))
+        {
+            audioSource.clip = audioClipW;
+            audioSource.Play();
+        }
+        if (other.CompareTag("Meth"))
+        {
+            audioSource.clip = audioClipM;
+            audioSource.Play();
+        }
     }
 
     /// <summary>

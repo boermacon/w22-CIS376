@@ -17,7 +17,6 @@ public class CocaineBrickScript : MonoBehaviour
     void Pickup(Collider player)
     {
         Debug.Log("Cocaine picked up");
-        //Add eating sound effect?
 
         //Cocaine increases run speed
         PlayerController playerStats = player.GetComponent<PlayerController>();
