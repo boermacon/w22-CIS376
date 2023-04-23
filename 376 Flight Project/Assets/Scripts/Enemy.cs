@@ -150,6 +150,7 @@ public class Enemy : MonoBehaviour
             if (nav.remainingDistance < 1f)
             {
                 nav.isStopped = true;
+                animator.SetBool("WalkForward", false);
             }
             // Move toward guardable object
             else
@@ -177,7 +178,7 @@ public class Enemy : MonoBehaviour
         //Make sure that the character only animates the idle animation while paused
         //Animation.SetFloat("InputX", 0);
         //Animation.SetFloat("InputZ", 0);
-        if (nav.speed > 0.1f || nav.speed < -0.1f)
+        if (!attacking && nav.isStopped == false && nav.speed > 0.1f || nav.speed < -0.1f)
         {
             animator.SetBool("WalkForward", true);
         }
@@ -199,6 +200,7 @@ public class Enemy : MonoBehaviour
     private void Die()
     {
         nav.isStopped = true;
+        animator.SetBool("WalkForward", false);
         animator.Play("Death", 0, 0.0f);
         audioSource.clip = audioClipHumanDeath;
         audioSource.Play();
@@ -217,6 +219,8 @@ public class Enemy : MonoBehaviour
             // Lock attack to true so no other attacks are flagged
             attacking = true;
             // Play attack animation and audio
+            nav.isStopped = true;
+            animator.SetBool("WalkForward", false);
             animator.Play("MeleeAttack_OneHanded", 0, 0.0f);
             audioSource.clip = audioClipHumanAttack;
             audioSource.Play();
