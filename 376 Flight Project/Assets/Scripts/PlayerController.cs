@@ -55,6 +55,9 @@ public class PlayerController : MonoBehaviour
 
     private Animator animator;
 
+    public Collider attackZoneCollider;
+
+
     public AudioClip audioClipC;
     public AudioClip audioClipW;
     public AudioClip audioClipM;
@@ -95,7 +98,6 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Update()
     {
-
         // This will detect forward and backward movement
         verticalMovement = Input.GetAxis("Vertical");
         if(verticalMovement < 0)
@@ -154,6 +156,7 @@ public class PlayerController : MonoBehaviour
             Move();
             Jump();
         }
+        Attack();
     }
 
     #region Movement
@@ -208,16 +211,20 @@ public class PlayerController : MonoBehaviour
         return Physics.Raycast(transform.position, Vector3.down, out hit, distToGround);
     }
 
-    private void attack()
+    private void Attack()
     {
-        if (Input.GetMouseButton(1))
+        if (Input.GetMouseButtonDown(0))
         {
+            Debug.Log("Attacking");
             animator.SetBool("Attack1", true);
-            RaycastHit hit;
-            Physics.Raycast(transform.position, Vector3.forward, out hit, distToGround);
-
-            hit.transform.gameObject.GetComponent<Enemy>();
+            attackZoneCollider.enabled = true;
+            Invoke("DisableAttackZone", .01f);
         }
+    }
+
+    private void DisableAttackZone()
+    {
+        attackZoneCollider.enabled = false;
     }
 
     private void OnCollisionEnter(Collision collision)

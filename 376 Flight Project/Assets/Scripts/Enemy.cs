@@ -29,7 +29,7 @@ public class Enemy : MonoBehaviour
 
     #region Health Vars
     private const float maxHealth = 45f;
-    private float currentHealth = maxHealth;
+    protected float currentHealth = maxHealth;
     #endregion
     #endregion
 
@@ -157,7 +157,7 @@ public class Enemy : MonoBehaviour
     {
     }
 
-    public void damage(int damage)
+    public void damage(float damage)
     {
         currentHealth -= damage;
         guardable = true;
