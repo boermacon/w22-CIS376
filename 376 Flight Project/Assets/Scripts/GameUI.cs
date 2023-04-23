@@ -39,7 +39,7 @@ public class GameUI : MonoBehaviour
         WeedText.GetComponent<TMP_Text>().SetText("Remaining Weed: " + weedAmt);
         MethText.GetComponent<TMP_Text>().SetText("Remaining Meth: " + methAmt);
 
-        // DistanceText.GetComponent<TMP_Text>().SetText("Closest Drug: " + Mathf.Round(closestPickup()));
+        DistanceText.GetComponent<TMP_Text>().SetText("Closest Drug: " + Mathf.Round(closestPickup()));
     }
 
     private float closestPickup()
