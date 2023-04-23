@@ -53,6 +53,10 @@ public class Enemy : MonoBehaviour
     public AudioClip audioClipHumanAttack;
     private AudioSource audioSource;
 
+
+    private const float chaseDistance = 50f;
+    private const float attackDistance = 2.5f;
+
     public enum State
     {
         CHASING,
@@ -89,54 +93,40 @@ public class Enemy : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        if (guardObject != null)
-        {
-            guardable = true;
-        }
-        else
-        {
-            guardable = false;
-        }
+        // Check to see if there is still and object to guard
+        if (guardObject != null) { guardable = true; }
+        else { guardable = false; }
+
+        // Get the distance from this object to the player
         float distance = Vector3.Distance(gameObject.transform.position, player.transform.position);
 
-        // if (distance < 50f)
-        // {
-        //     currentState = State.CHASING;
-        // }
-        // if (distance > 50f && !guardable)
-        // {
-        //     currentState = State.SEARCHING;
-        // }
-        // if (distance > 50f && guardable)
-        // {
-        //     currentState = State.GUARDING;
-        // }
-        if (distance < 2.5f)
+        // Within distance chase
+        if (distance < chaseDistance)
+        {
+            currentState = State.CHASING;
+        }
+        // If not within distance and there is no guardable object, serach for player
+        else if (distance > chaseDistance && !guardable)
+        {
+            currentState = State.SEARCHING;
+        }
+        // If not within distance and the is a guardable object, guard that object
+        else if (distance > chaseDistance && guardable)
+        {
+            currentState = State.GUARDING;
+        }
+        // If within attack distance, attack
+        else if (distance < attackDistance)
         {
             currentState = State.ATTACKING;
         }
-        if (currentHealth <= 0)
+        // If no health, die
+        else if (currentHealth <= 0)
         {
             currentState = State.DEAD;
         }
 
-
-
-        if (nav.remainingDistance < 0.5f && currentState == State.SEARCHING)
-        {
-            if (!nav.pathPending)
-            {
-                nav.SetDestination(player.transform.position);
-            }
-        }
-
-        if (currentState == State.ATTACKING)
-        {
-            gameObject.transform.LookAt(player.transform);
-            nav.isStopped = true;
-            StartCoroutine(Attack());
-        }
-
+        // If chasing, navigate to player transform
         if (currentState == State.CHASING)
         {
             nav.isStopped = false;
@@ -145,45 +135,67 @@ public class Enemy : MonoBehaviour
                 nav.SetDestination(player.transform.position);
             }
         }
-
+        // If seraching and reached last search point, get new search point
+        else if (currentState == State.SEARCHING && nav.remainingDistance < 0.5f)
+        {
+            if (!nav.pathPending)
+            {
+                nav.SetDestination(player.transform.position);
+            }
+        }
+        // If guarding, branch
         if(currentState == State.GUARDING)
         {
+            // Stop within 1f of guardable object
             if (nav.remainingDistance < 1f)
             {
                 nav.isStopped = true;
             }
+            // Move toward guardable object
             else
             {
                 nav.SetDestination(guardObject.transform.position);
             }
         }
-
-        if(currentState == State.DEAD)
+        // If attacking, attack
+        else if (currentState == State.ATTACKING)
+        {
+            gameObject.transform.LookAt(player.transform);
+            nav.isStopped = true;
+            StartCoroutine(Attack());
+        }
+        // If dieing, die
+        else if (currentState == State.DEAD)
         {
             if (!isDead)
             {
                 Die();
             }
         }
+
+
         //Make sure that the character only animates the idle animation while paused
         //Animation.SetFloat("InputX", 0);
         //Animation.SetFloat("InputZ", 0);
+        if (nav.speed > 0.1f || nav.speed < -0.1f)
+        {
+            animator.SetBool("WalkForward", true);
+        }
+        else
+        {
+            animator.SetBool("WalkForward", false);
+        }
 
         //kill player controller if they fall into the void
         if (transform.position.y < -10f)
         {
-            Die();
+            Destroy(gameObject);
         }
     }
-
+    
     /// <summary>
-    /// Method is called at a fixed rate instead of being tied to framerate like update() to move the character model around the game
+    /// Method to destroy enemy on death.
     /// </summary>
-    private void FixedUpdate()
-    {
-        
-    }
-    ///////////////////////////////
     private void Die()
     {
         nav.isStopped = true;
@@ -195,31 +207,51 @@ public class Enemy : MonoBehaviour
         isDead = true;
     }
 
+    /// <summary>
+    /// Private coroutine to attack player.
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator Attack() {
+        // Check that we aren't currently attacking
         if (!attacking) {
+            // Lock attack to true so no other attacks are flagged
             attacking = true;
+            // Play attack animation and audio
             animator.Play("MeleeAttack_OneHanded", 0, 0.0f);
             audioSource.clip = audioClipHumanAttack;
             audioSource.Play();
+
+            // Get playercontroller
             PlayerController playerStats = player.GetComponent<PlayerController>();
+            
+            // Damage player
             playerStats.Damage(attackDamage);
+            
+            //Wait a cooldown time
             yield return new WaitForSeconds(1.75f);
+            
+            // Open attack method to new attack instance.
             attacking = false;
         }
     }
 
-    public void damage(float damage)
-    {
-        currentHealth -= damage;
-        guardable = true;
-    }
+    /// <summary>
+    /// Public method to damage an enemey.
+    /// </summary>
+    /// <param name="damage">Float amount of damage to be removed from enemy health.</param>
+    public void damage(float damage) { currentHealth -= damage; }
 
+    /// <summary>
+    /// Public setter to define the guardable object of an enemy.
+    /// </summary>
+    /// <param name="guard">GameObject that an enemy needs to guard.</param>
+    public void setGuardObject(GameObject guard) { guardObject = guard; }
 
-    public void setGuardObject(GameObject guard)
-    {
-        guardObject = guard;
-    }
-
+    /// <summary>
+    /// Unused helper method
+    /// </summary>
+    /// <param name="radius"></param>
+    /// <returns></returns>
     public Vector3 RandomNavmeshLocation(float radius)
     {
         Vector3 randomDirection = Random.insideUnitSphere * radius;
