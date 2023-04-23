@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
     private float distToGround = 0.2f;
 
     public float maxSpeed = 20;
-    public float attackDamage = 1;
+    public float attackDamage = 40;
 
     private Animator animator;
 
@@ -220,6 +220,11 @@ public class PlayerController : MonoBehaviour
             attackZoneCollider.enabled = true;
             Invoke("DisableAttackZone", .01f);
         }
+    }
+
+    public void Damage(float damage)
+    {
+        currentHealth -= damage;
     }
 
     private void DisableAttackZone()

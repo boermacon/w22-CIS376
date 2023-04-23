@@ -29,7 +29,8 @@ public class Enemy : MonoBehaviour
 
     #region Health Vars
     private const float maxHealth = 45f;
-    protected float currentHealth = maxHealth;
+    public float currentHealth = maxHealth;
+    private bool isDead = false;
     #endregion
     #endregion
 
@@ -38,6 +39,7 @@ public class Enemy : MonoBehaviour
     private float distToGround = 0.2f;
 
     private float maxSpeed = 40;
+    public float attackDamage = 1;
 
     private Animator animator;
 
@@ -45,12 +47,15 @@ public class Enemy : MonoBehaviour
     private NavMeshAgent nav;
     private GameObject  player, guardObject;
     private bool guardable;
+    private bool attacking = false;
 
     public enum State
     {
         CHASING,
         GUARDING,
-        SEARCHING
+        SEARCHING,
+        ATTACKING,
+        DEAD
     }
     // Start is called before the first frame update
     void Start()
@@ -89,17 +94,25 @@ public class Enemy : MonoBehaviour
         }
         float distance = Vector3.Distance(gameObject.transform.position, player.transform.position);
 
-        if (distance < 50f)
+        // if (distance < 50f)
+        // {
+        //     currentState = State.CHASING;
+        // }
+        // if (distance > 50f && !guardable)
+        // {
+        //     currentState = State.SEARCHING;
+        // }
+        // if (distance > 50f && guardable)
+        // {
+        //     currentState = State.GUARDING;
+        // }
+        if (distance < 2.5f)
         {
-            currentState = State.CHASING;
+            currentState = State.ATTACKING;
         }
-        if (distance > 50f && !guardable)
+        if (currentHealth <= 0)
         {
-            currentState = State.SEARCHING;
-        }
-        if (distance > 50f && guardable)
-        {
-            currentState = State.GUARDING;
+            currentState = State.DEAD;
         }
 
 
@@ -110,6 +123,13 @@ public class Enemy : MonoBehaviour
             {
                 nav.SetDestination(player.transform.position);
             }
+        }
+
+        if (currentState == State.ATTACKING)
+        {
+            gameObject.transform.LookAt(player.transform);
+            nav.isStopped = true;
+            StartCoroutine(Attack());
         }
 
         if (currentState == State.CHASING)
@@ -133,6 +153,13 @@ public class Enemy : MonoBehaviour
             }
         }
 
+        if(currentState == State.DEAD)
+        {
+            if (!isDead)
+            {
+                Die();
+            }
+        }
         //Make sure that the character only animates the idle animation while paused
         //Animation.SetFloat("InputX", 0);
         //Animation.SetFloat("InputZ", 0);
@@ -140,7 +167,7 @@ public class Enemy : MonoBehaviour
         //kill player controller if they fall into the void
         if (transform.position.y < -10f)
         {
-            //Die();
+            Die();
         }
     }
 
@@ -151,10 +178,25 @@ public class Enemy : MonoBehaviour
     {
         
     }
-
-
-    private void attack()
+    ///////////////////////////////
+    private void Die()
     {
+        nav.isStopped = true;
+        animator.Play("Death", 0, 0.0f);
+        Debug.Log("Enemy has died");
+        rb.isKinematic = true;
+        isDead = true;
+    }
+
+    private IEnumerator Attack() {
+        if (!attacking) {
+            attacking = true;
+            animator.Play("MeleeAttack_OneHanded", 0, 0.0f);
+            PlayerController playerStats = player.GetComponent<PlayerController>();
+            playerStats.Damage(attackDamage);
+            yield return new WaitForSeconds(1.75f);
+            attacking = false;
+        }
     }
 
     public void damage(float damage)
