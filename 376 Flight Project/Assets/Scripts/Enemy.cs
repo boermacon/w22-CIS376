@@ -28,7 +28,7 @@ public class Enemy : MonoBehaviour
     #endregion
 
     #region Health Vars
-    private const float maxHealth = 45f;
+    public const float maxHealth = 45f;
     public float currentHealth = maxHealth;
     private bool isDead = false;
     #endregion
