@@ -39,8 +39,8 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Health Vars
-    private const float maxHealth = 45f;
-    private float currentHealth = maxHealth;
+    public const float maxHealth = 45f;
+    public float currentHealth = maxHealth;
     private int healthRechargeWait = 10;
     private int healthRechargePerSecond = 9;
     #endregion
@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
     private float distToGround = 0.2f;
 
     public float maxSpeed = 20;
-    public float attackDamage = 40;
+    public float attackDamage = 10;
 
     private Animator animator;
 
