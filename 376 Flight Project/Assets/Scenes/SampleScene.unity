@@ -5814,10 +5814,10 @@ GameObject:
   m_Component:
   - component: {fileID: 8328824549629925758}
   - component: {fileID: 2699275861580006148}
-  - component: {fileID: 8709466213510464457}
   - component: {fileID: 8709466213510464459}
   - component: {fileID: 8709466213510464460}
   - component: {fileID: 8709466213510464461}
+  - component: {fileID: 8709466213510464462}
   m_Layer: 0
   m_Name: PlayerBear
   m_TagString: Player
@@ -5825,20 +5825,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!64 &8709466213510464457
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8709466213510464452}
-  m_Material: {fileID: 13400000, guid: 0e55baba8ab666048b80419523b485bd, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 2959467708922500008, guid: b7822eb5951163b48830b6d9bcbf48b4, type: 3}
 --- !u!54 &8709466213510464459
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5986,6 +5972,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!65 &8709466213510464462
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8709466213510464452}
+  m_Material: {fileID: 13400000, guid: e1c1031c82ad56542a1432fb06bd4461, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.52, y: 1.66, z: 2.8}
+  m_Center: {x: 0, y: 0.8, z: 0.15}
 --- !u!4 &8730113977943184046
 Transform:
   m_ObjectHideFlags: 0

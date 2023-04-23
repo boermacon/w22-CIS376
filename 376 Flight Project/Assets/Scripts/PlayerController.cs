@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = gameObject.GetComponent<Rigidbody>();
-        distToGround = gameObject.GetComponent<MeshCollider>().bounds.extents.y;
+        //distToGround = gameObject.GetComponent<BoxCollider>().bounds.extents.y;
         animator = gameObject.GetComponent<Animator>();
 
         audioSource = GetComponent<AudioSource>();
@@ -150,10 +150,16 @@ public class PlayerController : MonoBehaviour
             //moveDir.Normalize();
         }
 
-        //kill player controller if they fall into the void
-        if (currentHealth <= 0 || transform.position.y < -10f)
+        //kill player controller if they don't have health
+        if (currentHealth <= 0)
         {
             Die();
+        }
+
+        if (transform.position.y < -5f)
+        {
+
+            gameObject.transform.position = new Vector3(rb.position.x, 1, rb.position.z);
         }
     }
 
@@ -169,6 +175,10 @@ public class PlayerController : MonoBehaviour
             {
                 Move();
                 Jump();
+            }
+            else
+            {
+                Debug.Log("NotGrouned");
             }
             StartCoroutine(Attack());
         }
