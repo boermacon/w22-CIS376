@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 //using Hashtable = ExitGames.Client.Photon.Hashtable;
 using UnityEngine.Animations;
+using UnityEngine.SceneManagement;
 
 
 public class PlayerController : MonoBehaviour
@@ -261,8 +262,13 @@ public class PlayerController : MonoBehaviour
             audioSource.Play();
             maxSpeed = 0;
             isDead = true;
-            //Game Over Screen?
+            Invoke("GameOver", 5f);
         }
+    }
+
+    private void GameOver()
+    {
+        SceneManager.LoadScene("GameOverScreen");
     }
 
     private void DisableAttackZone()
