@@ -49,6 +49,10 @@ public class Enemy : MonoBehaviour
     private bool guardable;
     private bool attacking = false;
 
+    public AudioClip audioClipHumanDeath;
+    public AudioClip audioClipHumanAttack;
+    private AudioSource audioSource;
+
     public enum State
     {
         CHASING,
@@ -63,6 +67,7 @@ public class Enemy : MonoBehaviour
         rb = gameObject.GetComponent<Rigidbody>();
         distToGround = gameObject.GetComponent<MeshCollider>().bounds.extents.y;
         animator = gameObject.GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
 
         player = GameObject.Find("PlayerBear");
         nav = GetComponent<NavMeshAgent>();
@@ -183,6 +188,8 @@ public class Enemy : MonoBehaviour
     {
         nav.isStopped = true;
         animator.Play("Death", 0, 0.0f);
+        audioSource.clip = audioClipHumanDeath;
+        audioSource.Play();
         Debug.Log("Enemy has died");
         rb.isKinematic = true;
         isDead = true;
@@ -192,6 +199,8 @@ public class Enemy : MonoBehaviour
         if (!attacking) {
             attacking = true;
             animator.Play("MeleeAttack_OneHanded", 0, 0.0f);
+            audioSource.clip = audioClipHumanAttack;
+            audioSource.Play();
             PlayerController playerStats = player.GetComponent<PlayerController>();
             playerStats.Damage(attackDamage);
             yield return new WaitForSeconds(1.75f);

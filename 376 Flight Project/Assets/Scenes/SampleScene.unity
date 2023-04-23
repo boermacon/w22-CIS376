@@ -7041,6 +7041,7 @@ GameObject:
   - component: {fileID: 1491743148}
   - component: {fileID: 1491743147}
   - component: {fileID: 1491743153}
+  - component: {fileID: 1491743154}
   m_Layer: 0
   m_Name: HumanMale_Character_FREE (1)
   m_TagString: Enemy
@@ -7167,6 +7168,104 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentHealth: 45
   attackDamage: 20
+  audioClipHumanDeath: {fileID: 8300000, guid: ee48bd05c96963c4fab7fb1717e21a7f, type: 3}
+  audioClipHumanAttack: {fileID: 8300000, guid: 26b2f1d9c5fc4f0448dc0f3c796e8a58, type: 3}
+--- !u!82 &1491743154
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1491743146}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1494162269
 GameObject:
   m_ObjectHideFlags: 0
@@ -14079,6 +14178,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentHealth: 45
   attackDamage: 1
+  audioClipHumanDeath: {fileID: 0}
+  audioClipHumanAttack: {fileID: 0}
 --- !u!54 &4540228998509138263
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -17303,6 +17404,9 @@ MonoBehaviour:
   audioClipC: {fileID: 8300000, guid: 34699fe079404ef4eb74b1aa084e5c5a, type: 3}
   audioClipW: {fileID: 8300000, guid: 8bab52338b8d7db4cbbeb0ca9c2b155e, type: 3}
   audioClipM: {fileID: 8300000, guid: 8c8499502cab193418c8dd77c2c7a0ec, type: 3}
+  audioClipBearDeath: {fileID: 8300000, guid: 43611abc69030d74f8654bd75ef2d89c, type: 3}
+  audioClipBearAttack1: {fileID: 8300000, guid: d4b5d10a92fbb1e4a86a454bad88a182, type: 3}
+  audioClipBearAttack2: {fileID: 8300000, guid: 79fb70c223b1aa94a8041a03cc1ca3ef, type: 3}
 --- !u!82 &8709466213510464461
 AudioSource:
   m_ObjectHideFlags: 0

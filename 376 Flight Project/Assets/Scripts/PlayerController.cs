@@ -53,6 +53,8 @@ public class PlayerController : MonoBehaviour
 
     public float maxSpeed = 20;
     public float attackDamage = 10;
+    private bool attacking = false;
+    private bool attackSound = true;
 
     private Animator animator;
 
@@ -62,6 +64,9 @@ public class PlayerController : MonoBehaviour
     public AudioClip audioClipC;
     public AudioClip audioClipW;
     public AudioClip audioClipM;
+    public AudioClip audioClipBearDeath;
+    public AudioClip audioClipBearAttack1;
+    public AudioClip audioClipBearAttack2;
     private AudioSource audioSource;
 
     // Start is called before the first frame update
@@ -164,7 +169,7 @@ public class PlayerController : MonoBehaviour
                 Move();
                 Jump();
             }
-            Attack();
+            StartCoroutine(Attack());
         }
     }
 
@@ -220,14 +225,25 @@ public class PlayerController : MonoBehaviour
         return Physics.Raycast(transform.position, Vector3.down, out hit, distToGround);
     }
 
-    private void Attack()
+    private IEnumerator Attack()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (!attacking && Input.GetMouseButtonDown(0))
         {
+            attacking = true;
             Debug.Log("Attacking");
-            animator.SetBool("Attack1", true);
+            animator.Play("Attack1", 0, 0.0f);
+            if (attackSound)
+            {
+                audioSource.clip = audioClipBearAttack1;
+            }
+            else
+                audioSource.clip = audioClipBearAttack2;
+            audioSource.Play();
+            attackSound = !attackSound;
             attackZoneCollider.enabled = true;
             Invoke("DisableAttackZone", .01f);
+            yield return new WaitForSeconds(1f);
+            attacking = false;
         }
     }
 
@@ -241,6 +257,8 @@ public class PlayerController : MonoBehaviour
         if(!isDead)
         {
             animator.Play("Death", 0, 0.0f);
+            audioSource.clip = audioClipBearDeath;
+            audioSource.Play();
             maxSpeed = 0;
             isDead = true;
             //Game Over Screen?
