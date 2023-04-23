@@ -106,22 +106,22 @@ public class Enemy : MonoBehaviour
             currentState = State.CHASING;
         }
         // If not within distance and there is no guardable object, serach for player
-        else if (distance > chaseDistance && !guardable)
+        if (distance > chaseDistance && !guardable)
         {
             currentState = State.SEARCHING;
         }
         // If not within distance and the is a guardable object, guard that object
-        else if (distance > chaseDistance && guardable)
+        if (distance > chaseDistance && guardable)
         {
             currentState = State.GUARDING;
         }
         // If within attack distance, attack
-        else if (distance < attackDistance)
+        if (distance < attackDistance)
         {
             currentState = State.ATTACKING;
         }
         // If no health, die
-        else if (currentHealth <= 0)
+        if (currentHealth <= 0)
         {
             currentState = State.DEAD;
         }
