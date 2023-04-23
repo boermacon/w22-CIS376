@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour
     public float currentHealth = maxHealth;
     private int healthRechargeWait = 10;
     private int healthRechargePerSecond = 9;
+    private bool isDead = false;
     #endregion
     #endregion
 
@@ -98,51 +99,56 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        // This will detect forward and backward movement
-        verticalMovement = Input.GetAxis("Vertical");
-        if(verticalMovement < 0)
+        if (!isDead)
         {
-            animator.SetBool("WalkForward", false);
-            animator.SetBool("WalkBackward", true);
-        }
-        else if(verticalMovement > 0)
-        {
-            animator.SetBool("WalkForward", true);
-            animator.SetBool("WalkBackward", false);
-        }
-        else
-        {
-            animator.SetBool("WalkForward", false);
-            animator.SetBool("WalkBackward", false);
-        }
-        // This will detect sideways movement
-        horizontalMovement = Input.GetAxis("Horizontal");
-        //
+            // This will detect forward and backward movement
+            verticalMovement = Input.GetAxis("Vertical");
+            if(verticalMovement < 0)
+            {
+                animator.SetBool("WalkForward", false);
+                animator.SetBool("WalkBackward", true);
+            }
+            else if(verticalMovement > 0)
+            {
+                animator.SetBool("WalkForward", true);
+                animator.SetBool("WalkBackward", false);
+            }
+            else
+            {
+                animator.SetBool("WalkForward", false);
+                animator.SetBool("WalkBackward", false);
+            }
+            // This will detect sideways movement
+            horizontalMovement = Input.GetAxis("Horizontal");
+            //
 
-        //Make sure that the character only animates the idle animation while paused
-        //Animation.SetFloat("InputX", 0);
-        //Animation.SetFloat("InputZ", 0);
+            //Make sure that the character only animates the idle animation while paused
+            //Animation.SetFloat("InputX", 0);
+            //Animation.SetFloat("InputZ", 0);
+
+            
+
+            //Debug.Log(Input.GetKeyDown(KeyCode.Space));
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Debug.Log(transform.up * jumpForce);
+                jumpDir = transform.up * jumpForce;
+                animator.SetBool("Jump", true);
+            }
+            else
+            {
+                animator.SetBool("Jump", false);
+            }
+
+            moveDir = transform.forward * verticalMovement + transform.right * horizontalMovement;
+            //moveDir.Normalize();
+        }
 
         //kill player controller if they fall into the void
-        if (transform.position.y < -10f)
+        if (currentHealth <= 0 || transform.position.y < -10f)
         {
-            //Die();
+            Die();
         }
-
-        //Debug.Log(Input.GetKeyDown(KeyCode.Space));
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.Log(transform.up * jumpForce);
-            jumpDir = transform.up * jumpForce;
-            animator.SetBool("Jump", true);
-        }
-        else
-        {
-            animator.SetBool("Jump", false);
-        }
-
-        moveDir = transform.forward * verticalMovement + transform.right * horizontalMovement;
-        //moveDir.Normalize();
     }
 
     /// <summary>
@@ -150,13 +156,16 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
-        Look();
-        if (IsGrounded())
+        if (!isDead)
         {
-            Move();
-            Jump();
+            Look();
+            if (IsGrounded())
+            {
+                Move();
+                Jump();
+            }
+            Attack();
         }
-        Attack();
     }
 
     #region Movement
@@ -225,6 +234,17 @@ public class PlayerController : MonoBehaviour
     public void Damage(float damage)
     {
         currentHealth -= damage;
+    }
+
+    public void Die()
+    {
+        if(!isDead)
+        {
+            animator.Play("Death", 0, 0.0f);
+            maxSpeed = 0;
+            isDead = true;
+            //Game Over Screen?
+        }
     }
 
     private void DisableAttackZone()
