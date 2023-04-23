@@ -108,12 +108,12 @@ public class PlayerController : MonoBehaviour
         {
             // This will detect forward and backward movement
             verticalMovement = Input.GetAxis("Vertical");
-            if(verticalMovement < 0)
+            if(!attacking && verticalMovement < 0)
             {
                 animator.SetBool("WalkForward", false);
                 animator.SetBool("WalkBackward", true);
             }
-            else if(verticalMovement > 0)
+            else if(!attacking && verticalMovement > 0)
             {
                 animator.SetBool("WalkForward", true);
                 animator.SetBool("WalkBackward", false);
