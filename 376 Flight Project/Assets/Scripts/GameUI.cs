@@ -1,14 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class GameUI : MonoBehaviour
 {
     private GameObject CokeHolder, WeedHolder, MethHolder;
-    private GameObject CokeText, WeedText, MethText, DistanceText;
+    private GameObject CokeText, WeedText, MethText, DistanceText, WinText;
     private GameObject player;
+    private AudioSource audioBearRoar;
     private int cokeAmt, weedAmt, methAmt;
+    public bool gameWon = false;
 
     // Start is called before the first frame update
     void Start()
@@ -22,8 +26,11 @@ public class GameUI : MonoBehaviour
         MethText = GameObject.Find("MethText");
 
         DistanceText = GameObject.Find("DistanceText");
+        WinText = GameObject.Find("WinText");
 
         player = GameObject.Find("PlayerBear");
+
+        audioBearRoar = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -40,6 +47,24 @@ public class GameUI : MonoBehaviour
         MethText.GetComponent<TMP_Text>().SetText("Remaining Meth: " + methAmt);
 
         DistanceText.GetComponent<TMP_Text>().SetText("Closest Drug: " + Mathf.Round(closestPickup()));
+
+        if (cokeAmt == 0 && weedAmt == 0 && methAmt == 0 && !gameWon)
+        {
+            WinGame();
+        }
+    }
+
+    private void WinGame()
+    {
+        gameWon = true;
+        WinText.GetComponent<Text>().enabled = true;
+        audioBearRoar.Play();
+        Invoke("BackToStart", 5f);
+    }
+
+    private void BackToStart()
+    {
+        SceneManager.LoadScene("StartMenu");
     }
 
     private float closestPickup()
